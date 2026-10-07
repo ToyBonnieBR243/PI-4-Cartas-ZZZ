@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: Billy
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: Billy Kid
+  arteCarta: {fileID: 6994710871084181383, guid: 85165638b58133d46880156918922768, type: 3}
+  historiaLore: "Um Construto Inteligente feito para o combate, Billy Kid j\xE1 foi
+    um temido campe\xE3o dos Filhos de Calydon  antes de se juntar \xE0s Lebres Astutas.
+    Apesar de ser um atirador habilidoso com seus dois rev\xF3lveres, ele tem uma
+    personalidade infantil. Billy \xE9 fascinado pela s\xE9rie \"Cavaleiros da Constela\xE7\xE3o\",
+    adorando o perigo e tendo a tend\xEAncia de esquecer de contar sua muni\xE7\xE3o
+    durante as lutas."
+  habilidades: "Passiva: Ataca os dois inimigos simultaneamente, por\xE9m divide
+    o seu dano base entre eles.\n\nHabilidade: Ap\xF3s 3 golpes, concentra um ataque
+    mais forte apenas em um inimigo.\n\nUlt: Ap\xF3s 6 golpes, ataca ambos os inimigos
+    com um ataque forte e aumenta sua Destreza, For\xE7a e Velocidade em +5 cada
+    por um turno."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20

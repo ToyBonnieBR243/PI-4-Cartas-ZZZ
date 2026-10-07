@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: Nicole
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: Nicole Demara
+  arteCarta: {fileID: 6777408937088187536, guid: 398aabadb0bbd3141929181275e16416, type: 3}
+  historiaLore: "Fundadora e l\xEDder da ag\xEAncia Lebres Astutas, Nicole Demara
+    \xE9 famosa por cobrar caro, mas vive afundada em d\xEDvidas e \xE0 beira da
+    fal\xEAncia. Embora sua obsess\xE3o por dinheiro tenha rendido avalia\xE7\xF5es
+    ruins no Interla\xE7o, ela \xE9 incrivelmente astuta nos neg\xF3cios. No fundo,
+    Nicole \xE9 uma l\xEDder confi\xE1vel e protetora, capaz de tirar sua equipe
+    de situa\xE7\xF5es imposs\xEDveis, e uma das poucas clientes em que Phaethon
+    confia sua verdadeira identidade."
+  habilidades: "Passiva: A cada 15 segundos, se ela for errar um golpe ou o inimigo
+    for desviar, ela \"rouba\" e o acerto \xE9 garantido.\n\nHabilidade: Ap\xF3s
+    3 golpes, come\xE7a a atacar os dois inimigos durante todo o restante do turno.
+    (N\xE3o ficando presa a carta alvo at\xE9 o final do turno).\n\nUlt: Ap\xF3s
+    6 golpes, atordoa os dois inimigos por alguns segundos e aplica 5 de dano cont\xEDnuo
+    em ambos logo em seguida por alguns segundos."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20

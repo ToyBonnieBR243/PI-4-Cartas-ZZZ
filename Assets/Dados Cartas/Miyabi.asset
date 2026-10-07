@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: Miyabi
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: Hoshimi Miyabi
+  arteCarta: {fileID: -5878351142366172699, guid: 294c25fe3101c81459dcfe0e5fe91913, type: 3}
+  historiaLore: "A mais jovem Ca\xE7adora do Vazio e Chefe da Se\xE7\xE3o 6 de Opera\xE7\xF5es
+    Especiais em Hollows. Hoshimi Miyabi usa sua l\xE2mina amaldi\xE7oada, \"Sem-cauda\",
+    para proteger Nova Eridu e expor sua corrup\xE7\xE3o. Apesar do cargo, ela foge
+    da burocracia (deixada para sua vice, Yanagi) e possui uma obsess\xE3o por treinamento.
+    Miyabi transforma tarefas mundanas, como abrir caixas ou evitar reuni\xF5es,
+    em treino intenso, podendo at\xE9 entrar em transe e apenas repetir a \xFAltima
+    palavra dita por algu\xE9m."
+  habilidades: "Passiva: Congela a carta alvo ap\xF3s dar 5 golpes.\n\nHabilidade:
+    Ap\xF3s 3 golpes, junta energia para desferir um corte r\xE1pido que causa mais
+    dano e aumenta a Destreza dela em +5 por um turno.\n\nUlt: Ap\xF3s 6 golpes,
+    causa um forte dano nas duas cartas inimigas e ganha +5 de Intelecto por um turno."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20

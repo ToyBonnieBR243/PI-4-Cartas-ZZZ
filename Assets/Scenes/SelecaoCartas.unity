@@ -201,7 +201,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 178398226}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1727311753}
+        m_TargetAssemblyTypeName: GerenciadorSelecao, Assembly-CSharp
+        m_MethodName: FecharPainel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &178398226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -817,7 +829,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 622874059}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1727311753}
+        m_TargetAssemblyTypeName: GerenciadorSelecao, Assembly-CSharp
+        m_MethodName: SelecionarCarta
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &622874059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,8 +914,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 392.58, y: -3.216}
-  m_SizeDelta: {x: 739.17, y: 178.843}
+  m_AnchoredPosition: {x: 392.58, y: -6.28}
+  m_SizeDelta: {x: 739.17, y: 370.243}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &734874185
 MonoBehaviour:
@@ -1385,7 +1409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1036244963
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1758,8 +1782,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 170.843}
-  m_SizeDelta: {x: 0, y: 340}
+  m_AnchoredPosition: {x: 0, y: 286.4293}
+  m_SizeDelta: {x: 0, y: 571.173}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1157833552
 MonoBehaviour:
@@ -2057,7 +2081,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8282705741490222572, guid: 6aea36eda9799834ca958444389f7bbd, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2157,7 +2181,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1540143595}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1727311753}
+        m_TargetAssemblyTypeName: GerenciadorSelecao, Assembly-CSharp
+        m_MethodName: BotaoAlternarLoreHabilidade
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1540143595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2230,8 +2266,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 196.23096, y: -46}
-  m_SizeDelta: {x: 346.462, y: 50}
+  m_AnchoredPosition: {x: 392.58, y: -46}
+  m_SizeDelta: {x: 739.17, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1546172243
 MonoBehaviour:
@@ -2333,6 +2369,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1546172241}
   m_CullTransparentMesh: 1
+--- !u!1 &1727311752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1727311754}
+  - component: {fileID: 1727311753}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1727311753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727311752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bd71f189876854c88ec5af5e7954d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GerenciadorSelecao
+  todasAsCartas:
+  - {fileID: 11400000, guid: 61c38611813a583438423b5af03fb2d1, type: 2}
+  - {fileID: 11400000, guid: 0599494f70f10b942880a053d3efd8d5, type: 2}
+  - {fileID: 11400000, guid: ccf2017317344ff4e9c33dbc598abbfd, type: 2}
+  - {fileID: 11400000, guid: 077d3dbb8edfb8248a36925b03fcef4d, type: 2}
+  - {fileID: 11400000, guid: d658d3e4971394d48884c3cdc32a3bb1, type: 2}
+  - {fileID: 11400000, guid: 9f6d14a09c91d1e4589d7be35aeba600, type: 2}
+  - {fileID: 11400000, guid: 276b89c8a348c8442947a3b9ce1fcb95, type: 2}
+  - {fileID: 11400000, guid: 82c429abaffbfed4bbbc148220e80ca8, type: 2}
+  - {fileID: 11400000, guid: bf2ad03b38110934ca22fa124317dc97, type: 2}
+  - {fileID: 11400000, guid: d6b2c92a2e1182f438b17b1f1cf3328a, type: 2}
+  painelDetalhes: {fileID: 1157833550}
+  textoNome: {fileID: 1546172243}
+  textoLore: {fileID: 734874185}
+  textoHabilidades: {fileID: 211637373}
+  textoBotaoLoreHab: {fileID: 1079345075}
+--- !u!4 &1727311754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727311752}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 118.82661, y: 67.16996, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1845644388
 GameObject:
   m_ObjectHideFlags: 0
@@ -2519,7 +2615,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2045260889}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1727311753}
+        m_TargetAssemblyTypeName: GerenciadorSelecao, Assembly-CSharp
+        m_MethodName: BotaoProximaCarta
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2045260889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2628,3 +2736,4 @@ SceneRoots:
   - {fileID: 969811959}
   - {fileID: 1388348637}
   - {fileID: 1845644392}
+  - {fileID: 1727311754}

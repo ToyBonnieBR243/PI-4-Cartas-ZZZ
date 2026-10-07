@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: Astra
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: Astra Yao
+  arteCarta: {fileID: -2687987710487199093, guid: 6f7b4bdd056346d4ca5c348cad7edb4a, type: 3}
+  historiaLore: "Conhecida como \"A Rainha\" de Nova Eridu, Astra Yao \xE9 uma celebridade
+    multitalentosa famosa por sua habilidade vocal e forte impacto na cena musical.
+    Fora dos palcos, ela \xE9 uma jovem alegre e um tanto desastrada, sempre ansiosa
+    para explorar a cidade, encontrar f\xE3s ou passar tempo com Phaethon. Atualmente
+    assinada com a gravadora Ode\xE3o, Astra \xE9 semi-dependente de sua empres\xE1ria
+    e amiga Evelyn para as tarefas do dia a dia."
+  habilidades: "Passiva: N\xE3o ataca.\n\nHabilidade: Ganha energia passivamente
+    com o tempo (a cada 10 segundos do turno). Quando usada, cura ela e seu aliado
+    em +15 de Vida e d\xE1 dano nos inimigos.\n\nUlt: Ap\xF3s usar a sua Habilidade
+    3 vezes, carrega a Ult que cura +35 de Vida dela e do seu aliado, e aumenta em
+    +5 o Intelecto de ambos por um turno."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20

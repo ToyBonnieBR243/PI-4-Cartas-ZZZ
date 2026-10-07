@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: Caesar
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: Caesar King
+  arteCarta: {fileID: 1494166073975393843, guid: 70e0efa1dca115249b818c751d503f9a, type: 3}
+  historiaLore: "Filha do fundador da antiga gangue Calydon, Caesar King foi criada
+    pelo \"Paiz\xE3o\" ap\xF3s o misterioso desaparecimento de seu pai. Durante a
+    queda da gangue, ela perdeu o bra\xE7o esquerdo, substitu\xEDdo por uma pr\xF3tese
+    feita a partir de um bra\xE7o reserva de Billy Kid. Ap\xF3s aprender a controlar
+    sua nova for\xE7a para salvar uma crian\xE7a, Caesar se tornou uma combatente
+    formid\xE1vel, sucedendo o \"Paiz\xE3o\" e assumindo a lideran\xE7a da fac\xE7\xE3o
+    Filhos de Calydon."
+  habilidades: "Passiva: Inicia a partida com 30 de Escudo permanente (que n\xE3o
+    some ap\xF3s o final do turno).\n\nHabilidade: Ap\xF3s 3 golpes, desfere um ataque
+    e concede +10 de Escudo para ela e seu aliado (este escudo tempor\xE1rio some
+    no final do turno).\n\nUlt: Ap\xF3s 6 golpes, concede +30 de Escudo para ela
+    e seu aliado (v\xE1lido at\xE9 o final do turno) e aumenta a For\xE7a dela em
+    +5 at\xE9 o final do turno."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20

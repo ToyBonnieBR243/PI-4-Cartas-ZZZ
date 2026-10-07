@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: Phaethon
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: Phaethon
+  arteCarta: {fileID: -6124577067679690408, guid: 196e88e1dca050245b281be8da1a59a9, type: 3}
+  historiaLore: "Formado por Wise e Belle, Phaethon \xE9 um Proxy de rank Lend\xE1rio
+    que utiliza o exclusivo Sistema de Explora\xE7\xE3o Profunda de Esferas Negras
+    (EPEN). Com essa tecnologia, eles controlam remotamente o Bangboo Eous a partir
+    de um local seguro, conseguindo manter comunica\xE7\xE3o em tempo real dentro
+    dos Hollows e atualizar rotas sem que o mapa fique obsoleto, um feito antes considerado
+    imposs\xEDvel."
+  habilidades: "Passiva: Tem 15% de chance de Confundir o inimigo que os atacar (aumenta
+    a chance do inimigo errar o ataque em 20% por alguns segundos).\n\nHabilidade:
+    Ap\xF3s 5 golpes, junta energia suficiente para for\xE7ar o seu aliado a usar
+    a Habilidade dele imediatamente.\n\nUlt: Ap\xF3s 6 golpes, aumenta a pr\xF3pria
+    Destreza em +10 por meio turno e a do seu aliado em +3, al\xE9m de causar dano
+    na carta \xE0 sua frente."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20

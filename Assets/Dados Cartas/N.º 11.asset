@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: "N.\xBA 11"
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: "N.\xBA 11"
+  arteCarta: {fileID: 4223175039572036539, guid: c0a182fffe2153049a3eb48bd7dff866, type: 3}
+  historiaLore: "Uma soldada sem nome e com forte afinidade por fogo, a N.\xBA 11
+    \xE9 a for\xE7a de ataque principal do Esquadr\xE3o OBOLS da For\xE7a de Defesa
+    de Nova Eridu. Uma militar exemplar e rigorosa com as regras, ela esconde duas
+    grandes peculiaridades: o h\xE1bito de chamar Phaethon por um codinome diferente
+    a cada encontro e uma paix\xE3o incontrol\xE1vel por comida apimentada, especialmente
+    pelos macarr\xF5es picantes da loja Cascata de Macarr\xE3o, na Rua Seis."
+  habilidades: "Passiva: O inimigo que ela atacar fica Queimando, recebendo 2 de
+    dano cont\xEDnuo por segundo. O dano de queima\xE7\xE3o dobra para 4 caso a N.\xBA
+    11 seja atordoada ou congelada.\n\nHabilidade: Ap\xF3s 3 golpes, desfere um ataque
+    forte na carta alvo e aplica o estado de Queimando em ambos os inimigos.\n\nUlt:
+    Ap\xF3s 6 ataques, aumenta sua pr\xF3pria Velocidade em +10 e eleva o dano base
+    de todas as queima\xE7\xF5es ativas para 4 por alguns segundos."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20

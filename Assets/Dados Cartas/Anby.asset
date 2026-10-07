@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: Anby
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: Anby Demara
+  arteCarta: {fileID: -731737002520378806, guid: 3758ab4601832ff4693d6f781dda2d4a, type: 3}
+  historiaLore: "Antiga soldada da For\xE7a de Defesa de Nova Eridu e atual membro
+    das Lebres Astutas, Anby Demara compensa sua falta de habilidades sociais com
+    proeza em combate e profundo conhecimento sobre Hollows. Ela possui duas grandes
+    obsess\xF5es: filmes, que usa como refer\xEAncia para situa\xE7\xF5es da vida
+    real, e hamb\xFArgueres, sua comida favorita por serem saborosos, baratos e nutricionalmente
+    completos."
+  habilidades: "Passiva: A cada 4 golpes, aplica Choque na carta alvo (reduz -1 de
+    Velocidade do inimigo). Nota: O efeito de redu\xE7\xE3o de velocidade n\xE3o
+    acumula, apenas reseta a dura\xE7\xE3o.\n\nHabilidade: Ap\xF3s 3 golpes, desfere
+    um golpe na carta alvo que a atordoa por alguns segundos e causa dano.\n\nUlt:
+    Ap\xF3s 6 golpes, utiliza sua Ult para atordoar sua carta alvo por mais tempo
+    e causa um grande dano, e aumenta em +5 sua destreza por um turno."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20

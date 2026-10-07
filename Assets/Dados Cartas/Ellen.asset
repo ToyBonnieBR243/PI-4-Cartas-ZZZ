@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e66850dd5bd724086c9e58944df7b6, type: 3}
+  m_Name: Ellen
+  m_EditorClassIdentifier: Assembly-CSharp::CartaData
+  nomePersonagem: Ellen Joe
+  arteCarta: {fileID: 4266176701636803036, guid: cc78be9b0d26297489d38ed5c007e1e7, type: 3}
+  historiaLore: "Uma Tirena tubar\xE3o bastante relaxada e estudante popular em Nova
+    Eridu, Ellen odeia gastar energia, preferindo passar o tempo no fliperama Godfinger
+    ou em karaok\xEAs. Ela divide sua rotina com o trabalho na Servi\xE7os Dom\xE9sticos
+    Vict\xF3ria, cuidando da seguran\xE7a e jardinagem. Apesar de detestar esfor\xE7o
+    f\xEDsico, ela libera um poder formid\xE1vel em combate para proteger seus amigos.
+    Como isso consome muita energia, ela est\xE1 quase sempre com um pirulito na
+    boca."
+  habilidades: "Passiva: Se o inimigo errar o ataque ou ela esquivar, o Intelecto
+    dela aumenta em +2 at\xE9 algu\xE9m conseguir acert\xE1-la.\n\nHabilidade: Ap\xF3s
+    3 golpes, causa um ataque forte na carta alvo e acumula +1 ponto de Congelamento.
+    (Ao atingir 3 pontos, o alvo congela).\n\nUlt: Ap\xF3s 6 golpes, ataca ambos
+    os inimigos causando grande dano e congelando-os instantaneamente."
+  vidaBase: 100
+  danoMinimo: 10
+  danoMaximo: 20
