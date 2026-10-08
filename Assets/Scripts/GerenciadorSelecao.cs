@@ -1,25 +1,34 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GerenciadorSelecao : MonoBehaviour
 {
     [Header("Banco de Cartas")]
     public CartaData[] todasAsCartas;
-    private int indiceCartaAtual = 0;
-    private bool[] cartasEscolhidas; // Controla quais cartas já foram tomadas
+    private int indiceCartaAtual = -1;
+    private bool[] cartasEscolhidas;
 
     [Header("Controle de Jogadores")]
-    public int jogadorAtual = 1; // 1 = Jogador 1 (Azul), 2 = Jogador 2 (Vermelho)
+    public int jogadorAtual = 1;
+    private int totalCartasEscolhidas = 0;
+
     public TextMeshProUGUI textoJogador;
     public Image fundoJogador;
-    public Color corJogador1 = new Color(0f, 0.5f, 1f, 1f); // Azul
-    public Color corJogador2 = new Color(1f, 0.2f, 0.2f, 1f); // Vermelho
+
+    public Color corJogador1 = new Color(0.08f, 0.28f, 0.55f, 1f);
+    public Color corJogador2 = new Color(0.55f, 0.10f, 0.10f, 1f);
+    public Color corFim = new Color(0.2f, 0.2f, 0.2f, 1f);
 
     [Header("Referências da Grade de Cartas")]
-    public Button[] botoesSlots;          // Componente Button de cada CardSlot
-    public Image[] imagensPersonagens;   // Componente Image da arte de cada CardSlot
-    public GameObject[] overlaysDestaque; // Componente Image/GameObject do Overlay de cada CardSlot
+    public Button[] botoesSlots;
+    public Image[] imagensPersonagens;
+    public ScrollRect scrollRectCartas;
+
+    [Header("Configurações do DOTween")]
+    public float escalaDestaque = 1.15f; // Zoom aplicado ao selecionar a carta
+    public float duracaoAnimacao = 0.2f;
 
     [Header("Painel e Textos")]
     public GameObject painelDetalhes;
@@ -35,19 +44,17 @@ public class GerenciadorSelecao : MonoBehaviour
     {
         cartasEscolhidas = new bool[todasAsCartas.Length];
         AtualizarIndicadorJogador();
-        EsconderTodosOverlays();
+        ResetarEfeitosCartas();
     }
 
-    // Chamado ao clicar em uma carta do Grid
     public void AbrirPainel(int indice)
     {
-        // Se a carta já foi escolhida por um jogador, ignora o clique
         if (cartasEscolhidas[indice]) return;
 
         indiceCartaAtual = indice;
         mostrandoLore = true;
 
-        DestacarCartaAtual(indice);
+        DestacarCartaComDOTween(indice);
         painelDetalhes.SetActive(true);
         AtualizarInterface();
     }
@@ -71,87 +78,133 @@ public class GerenciadorSelecao : MonoBehaviour
         AtualizarInterface();
     }
 
-    // Navega para a próxima carta disponível na grade
     public void BotaoProximaCarta()
     {
         int totalCartas = todasAsCartas.Length;
         int tentativas = 0;
 
-        // Procura a próxima carta que AINDA NÃO foi escolhida
         do
         {
             indiceCartaAtual = (indiceCartaAtual + 1) % totalCartas;
             tentativas++;
 
-            // Se todas as cartas foram escolhidas, encerra
             if (tentativas >= totalCartas) return;
 
         } while (cartasEscolhidas[indiceCartaAtual]);
 
-        DestacarCartaAtual(indiceCartaAtual);
+        DestacarCartaComDOTween(indiceCartaAtual);
         AtualizarInterface();
     }
 
-    // Confirma a seleção da carta para o jogador ativo
     public void SelecionarCarta()
     {
-        // Marca a carta como escolhida
         cartasEscolhidas[indiceCartaAtual] = true;
 
-        // Desativa o botão e esconde a imagem da arte do personagem
+        // Reseta o tamanho e desativa a carta selecionada
+        Transform slotTransform = botoesSlots[indiceCartaAtual].transform;
+        slotTransform.DOKill();
+        slotTransform.localScale = Vector3.one;
+
         botoesSlots[indiceCartaAtual].interactable = false;
         imagensPersonagens[indiceCartaAtual].gameObject.SetActive(false);
 
         FecharPainel();
+        totalCartasEscolhidas++;
 
-        // Alterna de jogador ou encerra a seleção
-        if (jogadorAtual == 1)
+        // Regra de Turnos Alternados (P1 -> P2 -> P1 -> P2)
+        if (totalCartasEscolhidas == 1 || totalCartasEscolhidas == 3)
         {
             jogadorAtual = 2;
-            AtualizarIndicadorJogador();
         }
-        else
+        else if (totalCartasEscolhidas == 2)
         {
-            textoJogador.text = "Seleção Concluída!";
-            Debug.Log("Ambos os jogadores escolheram suas cartas!");
+            jogadorAtual = 1;
         }
+        else if (totalCartasEscolhidas >= 4)
+        {
+            jogadorAtual = 0;
+        }
+
+        AtualizarIndicadorJogador();
     }
 
     public void FecharPainel()
     {
-        EsconderTodosOverlays();
+        ResetarEfeitosCartas();
         painelDetalhes.SetActive(false);
     }
 
-    private void DestacarCartaAtual(int indice)
+    private void DestacarCartaComDOTween(int indice)
     {
-        EsconderTodosOverlays();
-        if (overlaysDestaque.Length > indice && overlaysDestaque[indice] != null)
+        ResetarEfeitosCartas();
+
+        if (botoesSlots != null && indice < botoesSlots.Length)
         {
-            overlaysDestaque[indice].SetActive(true);
+            Transform slot = botoesSlots[indice].transform;
+
+            // Aplica o zoom suave na carta focada
+            slot.DOScale(Vector3.one * escalaDestaque, duracaoAnimacao)
+                .SetEase(Ease.OutBack)
+                .SetUpdate(true);
+
+            // FAZ O SCROLL VIEW ROLAR ATÉ A CARTA AUTOMATICAMENTE
+            if (scrollRectCartas != null)
+            {
+                // Como temos 2 colunas, dividimos o índice por 2 para saber em qual linha a carta está
+                int linhaAtual = indice / 2;
+                int totalLinhas = Mathf.CeilToInt(botoesSlots.Length / 2f);
+
+                if (totalLinhas > 1)
+                {
+                    // Calcula a posição (1 = topo, 0 = final)
+                    float posicaoScroll = 1f - ((float)linhaAtual / (totalLinhas - 1));
+
+                    // Move o Scroll de forma suave com o DOTween
+                    scrollRectCartas.DOVerticalNormalizedPos(posicaoScroll, duracaoAnimacao)
+                        .SetEase(Ease.OutCubic);
+                }
+            }
         }
     }
 
-    private void EsconderTodosOverlays()
+    private void ResetarEfeitosCartas()
     {
-        for (int i = 0; i < overlaysDestaque.Length; i++)
+        for (int i = 0; i < botoesSlots.Length; i++)
         {
-            if (overlaysDestaque[i] != null)
-                overlaysDestaque[i].SetActive(false);
+            if (botoesSlots[i] != null)
+            {
+                botoesSlots[i].transform.DOKill();
+                botoesSlots[i].transform.DOScale(Vector3.one, duracaoAnimacao);
+            }
         }
     }
 
     private void AtualizarIndicadorJogador()
     {
-        if (jogadorAtual == 1)
+        if (totalCartasEscolhidas == 0)
         {
-            textoJogador.text = "Jogador 1: Escolha sua carta";
-            fundoJogador.color = corJogador1;
+            textoJogador.text = "Jogador 1: Escolha sua 1ª carta";
+            fundoJogador.DOColor(corJogador1, duracaoAnimacao);
+        }
+        else if (totalCartasEscolhidas == 1)
+        {
+            textoJogador.text = "Jogador 2: Escolha sua 1ª carta";
+            fundoJogador.DOColor(corJogador2, duracaoAnimacao);
+        }
+        else if (totalCartasEscolhidas == 2)
+        {
+            textoJogador.text = "Jogador 1: Escolha sua 2ª carta";
+            fundoJogador.DOColor(corJogador1, duracaoAnimacao);
+        }
+        else if (totalCartasEscolhidas == 3)
+        {
+            textoJogador.text = "Jogador 2: Escolha sua 2ª carta";
+            fundoJogador.DOColor(corJogador2, duracaoAnimacao);
         }
         else
         {
-            textoJogador.text = "Jogador 2: Escolha sua carta";
-            fundoJogador.color = corJogador2;
+            textoJogador.text = "Seleção Concluída!";
+            fundoJogador.DOColor(corFim, duracaoAnimacao);
         }
     }
 }
