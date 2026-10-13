@@ -23,42 +23,42 @@ public class GerenciadorDistribuicao : MonoBehaviour
     public TextMeshProUGUI textoDestrezaValor;  // Ex: 10 DT
     public TextMeshProUGUI textoRaivaValor;     // Ex: 10 RV
 
-    [Header("Botão de Confirmação")]
+    [Header("Botão de Confirmação e Auto-Fill")]
     public Button botaoConfirmar;
-    public TextMeshProUGUI textoBotaoConfirmar; // O texto de dentro do botão Confirmar
+    public TextMeshProUGUI textoBotaoConfirmar;
 
     [Header("Controle Visual de Jogadores")]
-    public Image fundoJogador; // Arraste o objeto Fundo_Jogador aqui
+    public Image fundoJogador;
     public Color corJogador1 = new Color(0.08f, 0.28f, 0.55f, 1f); // Azul
     public Color corJogador2 = new Color(0.55f, 0.10f, 0.10f, 1f); // Vermelho
     public float duracaoAnimacao = 0.2f;
 
     [Header("Fallback para Testes Diretos na Cena")]
-    public CartaData[] cartasFallbackParaTeste; // Adicione pelo menos 4 cartas aqui para o teste
+    public CartaData[] cartasFallbackParaTeste;
 
     // Controle de Turno e Cartas
     private int jogadorAtual = 1;
-    private int indiceCartaDoJogador = 0; // 0 ou 1 (as duas cartas do jogador)
+    private int indiceCartaDoJogador = 0; // 0 ou 1
 
     private AtributosRuntime[] atributosJ1 = new AtributosRuntime[2];
     private AtributosRuntime[] atributosJ2 = new AtributosRuntime[2];
     private AtributosRuntime atributosAtuais;
+    private CartaData cartaAtivaAtual;
 
-    // Cronômetro (2 minutos = 120 segundos)
+    // Cronômetro (120 segundos)
     private float tempoRestante = 120f;
     private bool cronometroAtivo = false;
+    private bool tempoEsgotadoAplicado = false; // Controla se o auto-fill por tempo já ocorreu nesta carta
 
     private void Start()
     {
         // --- FALLBACK PARA TESTES ---
-        // Jogador 1 pega os elementos 0 e 1
         if (DadosPartida.cartasJogador1.Count < 2 && cartasFallbackParaTeste.Length >= 4)
         {
             DadosPartida.cartasJogador1.Clear();
             DadosPartida.cartasJogador1.Add(cartasFallbackParaTeste[0]);
             DadosPartida.cartasJogador1.Add(cartasFallbackParaTeste[1]);
         }
-        // Jogador 2 pega os elementos 2 e 3 (cartas diferentes)
         if (DadosPartida.cartasJogador2.Count < 2 && cartasFallbackParaTeste.Length >= 4)
         {
             DadosPartida.cartasJogador2.Clear();
@@ -85,6 +85,7 @@ public class GerenciadorDistribuicao : MonoBehaviour
 
         tempoRestante = 120f;
         cronometroAtivo = true;
+        tempoEsgotadoAplicado = false;
     }
 
     private void Update()
@@ -100,45 +101,36 @@ public class GerenciadorDistribuicao : MonoBehaviour
 
             if (tempoRestante <= 0)
             {
-                ForcarConfirmacaoTempoEsgotado();
+                TratarTempoEsgotado();
             }
         }
     }
 
     private void CarregarCartaAtual()
     {
-        CartaData cartaAtiva;
         CartaData cartaLateral;
 
         if (jogadorAtual == 1)
         {
             atributosAtuais = atributosJ1[indiceCartaDoJogador];
-            cartaAtiva = DadosPartida.cartasJogador1[indiceCartaDoJogador];
+            cartaAtivaAtual = DadosPartida.cartasJogador1[indiceCartaDoJogador];
             cartaLateral = DadosPartida.cartasJogador1[indiceCartaDoJogador == 0 ? 1 : 0];
             textoTituloJogador.text = $"Jogador 1: Distribua os Pontos (Carta {indiceCartaDoJogador + 1}/2)";
         }
         else
         {
             atributosAtuais = atributosJ2[indiceCartaDoJogador];
-            cartaAtiva = DadosPartida.cartasJogador2[indiceCartaDoJogador];
+            cartaAtivaAtual = DadosPartida.cartasJogador2[indiceCartaDoJogador];
             cartaLateral = DadosPartida.cartasJogador2[indiceCartaDoJogador == 0 ? 1 : 0];
             textoTituloJogador.text = $"Jogador 2: Distribua os Pontos (Carta {indiceCartaDoJogador + 1}/2)";
         }
 
-        if (imagemCartaFoco != null) imagemCartaFoco.sprite = cartaAtiva.arteCarta;
+        if (imagemCartaFoco != null) imagemCartaFoco.sprite = cartaAtivaAtual.arteCarta;
         if (imagemCartaLateral != null) imagemCartaLateral.sprite = cartaLateral.arteCarta;
 
-        // Altera o texto do botão de acordo com a carta ativa
         if (textoBotaoConfirmar != null)
         {
-            if (indiceCartaDoJogador == 0)
-            {
-                textoBotaoConfirmar.text = "Próxima Carta";
-            }
-            else
-            {
-                textoBotaoConfirmar.text = "Confirmar";
-            }
+            textoBotaoConfirmar.text = (indiceCartaDoJogador == 0) ? "Próxima Carta" : "Confirmar";
         }
 
         if (fundoJogador != null)
@@ -147,6 +139,85 @@ public class GerenciadorDistribuicao : MonoBehaviour
             fundoJogador.DOColor(corAlvo, duracaoAnimacao);
         }
 
+        tempoRestante = 120f;
+        cronometroAtivo = true;
+        tempoEsgotadoAplicado = false;
+
+        AtualizarInterface();
+    }
+
+    public void BotaoPreenchimentoAutomatico()
+    {
+        if (cartaAtivaAtual == null) return;
+
+        atributosAtuais.forca = 0;
+        atributosAtuais.velocidade = 0;
+        atributosAtuais.intelecto = 0;
+        atributosAtuais.destreza = 0;
+        atributosAtuais.raiva = 0;
+        atributosAtuais.pontosRestantes = 20;
+
+        string nome = cartaAtivaAtual.nomePersonagem.Trim();
+
+        if (nome == "Hoshimi Miyabi")
+        {
+            atributosAtuais.velocidade = 10;
+            atributosAtuais.destreza = 10;
+        }
+        else if (nome == "Astra Yao")
+        {
+            atributosAtuais.intelecto = 10;
+            atributosAtuais.velocidade = 10;
+        }
+        else if (nome == "Phaethon")
+        {
+            atributosAtuais.intelecto = 10;
+            atributosAtuais.raiva = 10;
+        }
+        else if (nome == "Ellen Joe")
+        {
+            atributosAtuais.forca = 10;
+            atributosAtuais.destreza = 10;
+        }
+        else if (nome == "Caesar King")
+        {
+            atributosAtuais.forca = 10;
+            atributosAtuais.intelecto = 10;
+        }
+        else if (nome == "Jane Doe")
+        {
+            atributosAtuais.velocidade = 10;
+            atributosAtuais.intelecto = 5;
+            atributosAtuais.destreza = 5;
+        }
+        else if (nome == "Anby")
+        {
+            atributosAtuais.forca = 7;
+            atributosAtuais.velocidade = 7;
+            atributosAtuais.destreza = 6;
+        }
+        else if (nome == "Billy Kid")
+        {
+            atributosAtuais.destreza = 10;
+            atributosAtuais.raiva = 10;
+        }
+        else if (nome == "Nicole Demara")
+        {
+            atributosAtuais.forca = 10;
+            atributosAtuais.raiva = 10;
+        }
+        else if (nome == "N.º 11")
+        {
+            atributosAtuais.forca = 10;
+            atributosAtuais.velocidade = 10;
+        }
+        else
+        {
+            atributosAtuais.forca = 10;
+            atributosAtuais.velocidade = 10;
+        }
+
+        atributosAtuais.pontosRestantes = 0;
         AtualizarInterface();
     }
 
@@ -196,7 +267,6 @@ public class GerenciadorDistribuicao : MonoBehaviour
         }
     }
 
-    // Chamado pelo Botão Confirmar/Próxima Carta
     public void ConfirmarAtributos()
     {
         if (atributosAtuais.pontosRestantes > 0) return;
@@ -205,12 +275,11 @@ public class GerenciadorDistribuicao : MonoBehaviour
 
         if (indiceCartaDoJogador < 2)
         {
-            // Transição para a 2ª carta com Fade suave
-            FadeTextosUI(0f, 0.08f, () => {
+            FadeTextosUI(0f, 0.08f, () =>
+            {
                 CarregarCartaAtual();
                 FadeTextosUI(1f, 0.08f, null);
             });
-            tempoRestante = 120f;
         }
         else
         {
@@ -219,19 +288,17 @@ public class GerenciadorDistribuicao : MonoBehaviour
                 DadosPartida.atributosFinalJ1.Add(atributosJ1[0]);
                 DadosPartida.atributosFinalJ1.Add(atributosJ1[1]);
 
-                // Passa para o Jogador 2
                 jogadorAtual = 2;
                 indiceCartaDoJogador = 0;
 
-                FadeTextosUI(0f, 0.08f, () => {
+                FadeTextosUI(0f, 0.08f, () =>
+                {
                     CarregarCartaAtual();
                     FadeTextosUI(1f, 0.08f, null);
                 });
-                tempoRestante = 120f;
             }
             else
             {
-                // Jogador 2 terminou as 2 cartas -> Vai para a Batalha
                 DadosPartida.atributosFinalJ2.Add(atributosJ2[0]);
                 DadosPartida.atributosFinalJ2.Add(atributosJ2[1]);
 
@@ -252,18 +319,31 @@ public class GerenciadorDistribuicao : MonoBehaviour
         if (textoPontosRestantes) seq.Join(textoPontosRestantes.DOFade(alphaDestino, duracao));
         if (textoPreviaGeral) seq.Join(textoPreviaGeral.DOFade(alphaDestino, duracao));
 
-        seq.OnComplete(() => {
+        seq.OnComplete(() =>
+        {
             noConcluido?.Invoke();
         });
     }
 
-    private void ForcarConfirmacaoTempoEsgotado()
+    private void TratarTempoEsgotado()
     {
-        while (atributosAtuais.pontosRestantes > 0)
+        // Se o preenchimento automático ainda não foi aplicado nesta rodada
+        if (!tempoEsgotadoAplicado)
         {
-            atributosAtuais.forca++;
-            atributosAtuais.pontosRestantes--;
+            if (atributosAtuais.pontosRestantes > 0)
+            {
+                BotaoPreenchimentoAutomatico(); // Aplica a build sugerida
+            }
+
+            // Dá 20 segundos extras para o jogador conferir
+            tempoRestante = 20f;
+            tempoEsgotadoAplicado = true;
         }
-        ConfirmarAtributos();
+        else
+        {
+            // Os 20 segundos extras acabaram! Confirma automaticamente e avança
+            cronometroAtivo = false;
+            ConfirmarAtributos();
+        }
     }
 }
