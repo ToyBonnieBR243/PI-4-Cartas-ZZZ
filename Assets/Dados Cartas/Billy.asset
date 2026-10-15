@@ -25,6 +25,8 @@ MonoBehaviour:
     mais forte apenas em um inimigo.\n\nUlt: Ap\xF3s 6 golpes, ataca ambos os inimigos
     com um ataque forte e aumenta sua Destreza, For\xE7a e Velocidade em +5 cada
     por um turno."
+  cargasNecessariasSkill: 3
+  cargasNecessariasUlt: 6
   vidaBase: 100
   danoMinimo: 10
   danoMaximo: 20

@@ -27,6 +27,8 @@ MonoBehaviour:
     (N\xE3o ficando presa a carta alvo at\xE9 o final do turno).\n\nUlt: Ap\xF3s
     6 golpes, atordoa os dois inimigos por alguns segundos e aplica 5 de dano cont\xEDnuo
     em ambos logo em seguida por alguns segundos."
+  cargasNecessariasSkill: 3
+  cargasNecessariasUlt: 6
   vidaBase: 100
   danoMinimo: 10
   danoMaximo: 20

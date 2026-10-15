@@ -25,6 +25,31 @@ MonoBehaviour:
     em +15 de Vida e d\xE1 dano nos inimigos.\n\nUlt: Ap\xF3s usar a sua Habilidade
     3 vezes, carrega a Ult que cura +35 de Vida dela e do seu aliado, e aumenta em
     +5 o Intelecto de ambos por um turno."
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  descricaoResumidaSkill: Cura +15 HP para si e o aliado e causa 20 de dano em ambas
+    as cartas inimigas.
+  descricaoResumidaUlt: Cura +35 HP para si e o aliado e aumenta o Intelecto de ambos
+    em +5 por 1 turno.
+  cargasNecessariasSkill: 4
+  cargasNecessariasUlt: 3
+  alcanceSkill: 1
+  alcanceUlt: 0
+  skillPodeCritar: 0
+  danoBaseSkill: 20
+  danoCriticoSkill: 0
+  valorCuraSkill: 15
+  valorBuffEscudoSkill: 0
+  ultPodeCritar: 0
+  danoBaseUlt: 0
+  danoCriticoUlt: 0
+  valorCuraUlt: 35
+  valorBuffEscudoUlt: 0
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 0
+  buffRaivaSkill: 0
+  buffForcaUlt: 0
+  buffVelocidadeUlt: 0
+  buffIntelectoUlt: 5
+  buffDestrezaUlt: 0
+  buffRaivaUlt: 0

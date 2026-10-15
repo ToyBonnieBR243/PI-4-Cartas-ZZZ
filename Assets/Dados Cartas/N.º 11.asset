@@ -26,6 +26,8 @@ MonoBehaviour:
     forte na carta alvo e aplica o estado de Queimando em ambos os inimigos.\n\nUlt:
     Ap\xF3s 6 ataques, aumenta sua pr\xF3pria Velocidade em +10 e eleva o dano base
     de todas as queima\xE7\xF5es ativas para 4 por alguns segundos."
+  cargasNecessariasSkill: 3
+  cargasNecessariasUlt: 6
   vidaBase: 100
   danoMinimo: 10
   danoMaximo: 20

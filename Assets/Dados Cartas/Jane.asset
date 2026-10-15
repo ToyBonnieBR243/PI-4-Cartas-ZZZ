@@ -26,6 +26,8 @@ MonoBehaviour:
     Ap\xF3s 6 golpes, ataca 5 vezes seguidas as duas cartas inimigas. Estes golpes
     n\xE3o contam para carregar Habilidade/Ult, mas desta vez podem critar. Tamb\xE9m
     aumenta o Intelecto dela em +10 por meio turno."
+  cargasNecessariasSkill: 3
+  cargasNecessariasUlt: 6
   vidaBase: 100
   danoMinimo: 10
   danoMaximo: 20

@@ -26,6 +26,30 @@ MonoBehaviour:
     a Habilidade dele imediatamente.\n\nUlt: Ap\xF3s 6 golpes, aumenta a pr\xF3pria
     Destreza em +10 por meio turno e a do seu aliado em +3, al\xE9m de causar dano
     na carta \xE0 sua frente."
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  descricaoResumidaSkill: "For\xE7a a carta aliada a ativar sua Habilidade imediatamente."
+  descricaoResumidaUlt: "Causa 40 de dano na carta \xE0 frente. Aumenta pr\xF3pria
+    Destreza em +10 e do aliado em +3."
+  cargasNecessariasSkill: 5
+  cargasNecessariasUlt: 6
+  alcanceSkill: 0
+  alcanceUlt: 0
+  skillPodeCritar: 0
+  danoBaseSkill: 0
+  danoCriticoSkill: 0
+  valorCuraSkill: 0
+  valorBuffEscudoSkill: 0
+  ultPodeCritar: 0
+  danoBaseUlt: 40
+  danoCriticoUlt: 0
+  valorCuraUlt: 0
+  valorBuffEscudoUlt: 0
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 0
+  buffRaivaSkill: 0
+  buffForcaUlt: 0
+  buffVelocidadeUlt: 0
+  buffIntelectoUlt: 0
+  buffDestrezaUlt: 10
+  buffRaivaUlt: 0

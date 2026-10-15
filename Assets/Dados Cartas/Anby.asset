@@ -26,6 +26,8 @@ MonoBehaviour:
     um golpe na carta alvo que a atordoa por alguns segundos e causa dano.\n\nUlt:
     Ap\xF3s 6 golpes, utiliza sua Ult para atordoar sua carta alvo por mais tempo
     e causa um grande dano, e aumenta em +5 sua destreza por um turno."
+  cargasNecessariasSkill: 3
+  cargasNecessariasUlt: 6
   vidaBase: 100
   danoMinimo: 10
   danoMaximo: 20

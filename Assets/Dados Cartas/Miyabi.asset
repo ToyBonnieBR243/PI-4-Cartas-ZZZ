@@ -25,6 +25,31 @@ MonoBehaviour:
     Ap\xF3s 3 golpes, junta energia para desferir um corte r\xE1pido que causa mais
     dano e aumenta a Destreza dela em +5 por um turno.\n\nUlt: Ap\xF3s 6 golpes,
     causa um forte dano nas duas cartas inimigas e ganha +5 de Intelecto por um turno."
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  descricaoResumidaSkill: Causa 35 de dano na carta alvo e aumenta Destreza em +5
+    por 1 turno.
+  descricaoResumidaUlt: Causa 60 de dano em ambas as cartas inimigas e ganha +5 de
+    Intelecto por 1 turno.
+  cargasNecessariasSkill: 3
+  cargasNecessariasUlt: 6
+  alcanceSkill: 0
+  alcanceUlt: 1
+  skillPodeCritar: 0
+  danoBaseSkill: 35
+  danoCriticoSkill: 0
+  valorCuraSkill: 0
+  valorBuffEscudoSkill: 0
+  ultPodeCritar: 0
+  danoBaseUlt: 60
+  danoCriticoUlt: 0
+  valorCuraUlt: 0
+  valorBuffEscudoUlt: 0
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 5
+  buffRaivaSkill: 0
+  buffForcaUlt: 0
+  buffVelocidadeUlt: 0
+  buffIntelectoUlt: 5
+  buffDestrezaUlt: 0
+  buffRaivaUlt: 0

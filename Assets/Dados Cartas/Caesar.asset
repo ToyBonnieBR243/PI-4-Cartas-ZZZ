@@ -27,6 +27,8 @@ MonoBehaviour:
     no final do turno).\n\nUlt: Ap\xF3s 6 golpes, concede +30 de Escudo para ela
     e seu aliado (v\xE1lido at\xE9 o final do turno) e aumenta a For\xE7a dela em
     +5 at\xE9 o final do turno."
+  cargasNecessariasSkill: 3
+  cargasNecessariasUlt: 6
   vidaBase: 100
   danoMinimo: 10
   danoMaximo: 20
