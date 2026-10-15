@@ -255,7 +255,7 @@ public class GerenciadorDistribuicao : MonoBehaviour
         if (textoPreviaGeral != null)
         {
             textoPreviaGeral.text = $"Dano: {danoMin} a {danoMax}\n" +
-                                    $"Peso Turno: {atributosAtuais.velocidade}\n" +
+                                    $"Velocidade: {atributosAtuais.velocidade}\n" +
                                     $"Esquiva: {esquiva}%\n" +
                                     $"Crítico: {critico}%\n" +
                                     $"Fúria (<30% Vida): +{bonusRaiva}%";
