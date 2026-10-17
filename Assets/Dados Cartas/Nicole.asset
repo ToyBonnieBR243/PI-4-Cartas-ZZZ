@@ -27,8 +27,31 @@ MonoBehaviour:
     (N\xE3o ficando presa a carta alvo at\xE9 o final do turno).\n\nUlt: Ap\xF3s
     6 golpes, atordoa os dois inimigos por alguns segundos e aplica 5 de dano cont\xEDnuo
     em ambos logo em seguida por alguns segundos."
+  descricaoResumidaSkill: Ataca ambas as cartas inimigas durante todo o restante
+    do turno causando 20 de dano por ciclo.
+  descricaoResumidaUlt: "Atordoa ambas as cartas inimigas, causa 15 de dano base
+    e aplica 5 de dano cont\xEDnuo por segundo."
   cargasNecessariasSkill: 3
   cargasNecessariasUlt: 6
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  alcanceSkill: 1
+  alcanceUlt: 1
+  skillPodeCritar: 0
+  danoBaseSkill: 20
+  danoCriticoSkill: 0
+  valorCuraSkill: 0
+  valorBuffEscudoSkill: 0
+  ultPodeCritar: 0
+  danoBaseUlt: 15
+  danoCriticoUlt: 0
+  valorCuraUlt: 0
+  valorBuffEscudoUlt: 0
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 0
+  buffRaivaSkill: 0
+  buffForcaUlt: 0
+  buffVelocidadeUlt: 0
+  buffIntelectoUlt: 0
+  buffDestrezaUlt: 0
+  buffRaivaUlt: 0

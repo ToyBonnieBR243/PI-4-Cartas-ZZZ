@@ -27,8 +27,31 @@ MonoBehaviour:
     no final do turno).\n\nUlt: Ap\xF3s 6 golpes, concede +30 de Escudo para ela
     e seu aliado (v\xE1lido at\xE9 o final do turno) e aumenta a For\xE7a dela em
     +5 at\xE9 o final do turno."
+  descricaoResumidaSkill: "Causa 25 de dano na carta alvo e concede +10 de Escudo
+    para si e o aliado at\xE9 o fim do turno."
+  descricaoResumidaUlt: "Concede +30 de Escudo para si e o aliado e ganha +5 de For\xE7a
+    at\xE9 o fim do turno."
   cargasNecessariasSkill: 3
   cargasNecessariasUlt: 6
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  alcanceSkill: 0
+  alcanceUlt: 0
+  skillPodeCritar: 0
+  danoBaseSkill: 25
+  danoCriticoSkill: 0
+  valorCuraSkill: 0
+  valorBuffEscudoSkill: 10
+  ultPodeCritar: 0
+  danoBaseUlt: 0
+  danoCriticoUlt: 0
+  valorCuraUlt: 0
+  valorBuffEscudoUlt: 30
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 0
+  buffRaivaSkill: 0
+  buffForcaUlt: 5
+  buffVelocidadeUlt: 0
+  buffIntelectoUlt: 0
+  buffDestrezaUlt: 0
+  buffRaivaUlt: 0

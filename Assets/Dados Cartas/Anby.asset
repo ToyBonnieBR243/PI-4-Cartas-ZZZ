@@ -26,8 +26,30 @@ MonoBehaviour:
     um golpe na carta alvo que a atordoa por alguns segundos e causa dano.\n\nUlt:
     Ap\xF3s 6 golpes, utiliza sua Ult para atordoar sua carta alvo por mais tempo
     e causa um grande dano, e aumenta em +5 sua destreza por um turno."
+  descricaoResumidaSkill: Causa 30 de dano na carta alvo e a atordoa por alguns segundos.
+  descricaoResumidaUlt: Causa 75 de dano na carta alvo, atordoa-a por mais tempo
+    e ganha +5 de Destreza por 1 turno.
   cargasNecessariasSkill: 3
   cargasNecessariasUlt: 6
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  alcanceSkill: 0
+  alcanceUlt: 0
+  skillPodeCritar: 0
+  danoBaseSkill: 30
+  danoCriticoSkill: 0
+  valorCuraSkill: 0
+  valorBuffEscudoSkill: 0
+  ultPodeCritar: 0
+  danoBaseUlt: 75
+  danoCriticoUlt: 0
+  valorCuraUlt: 0
+  valorBuffEscudoUlt: 0
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 0
+  buffRaivaSkill: 0
+  buffForcaUlt: 0
+  buffVelocidadeUlt: 0
+  buffIntelectoUlt: 0
+  buffDestrezaUlt: 5
+  buffRaivaUlt: 0

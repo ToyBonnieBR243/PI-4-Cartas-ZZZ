@@ -26,8 +26,31 @@ MonoBehaviour:
     Ap\xF3s 6 golpes, ataca 5 vezes seguidas as duas cartas inimigas. Estes golpes
     n\xE3o contam para carregar Habilidade/Ult, mas desta vez podem critar. Tamb\xE9m
     aumenta o Intelecto dela em +10 por meio turno."
+  descricaoResumidaSkill: "Ataca 3 vezes seguidas a carta alvo causando 15 de dano
+    por golpe (sem cr\xEDtico)."
+  descricaoResumidaUlt: "Ataca 5 vezes em \xE1rea causando 20-40 de dano por golpe
+    em ambas as cartas inimigas. Ganha +10 de Intelecto."
   cargasNecessariasSkill: 3
   cargasNecessariasUlt: 6
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  alcanceSkill: 0
+  alcanceUlt: 1
+  skillPodeCritar: 0
+  danoBaseSkill: 15
+  danoCriticoSkill: 0
+  valorCuraSkill: 0
+  valorBuffEscudoSkill: 0
+  ultPodeCritar: 1
+  danoBaseUlt: 20
+  danoCriticoUlt: 40
+  valorCuraUlt: 0
+  valorBuffEscudoUlt: 0
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 0
+  buffRaivaSkill: 0
+  buffForcaUlt: 0
+  buffVelocidadeUlt: 0
+  buffIntelectoUlt: 10
+  buffDestrezaUlt: 0
+  buffRaivaUlt: 0

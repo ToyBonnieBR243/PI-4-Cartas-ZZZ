@@ -26,8 +26,31 @@ MonoBehaviour:
     3 golpes, causa um ataque forte na carta alvo e acumula +1 ponto de Congelamento.
     (Ao atingir 3 pontos, o alvo congela).\n\nUlt: Ap\xF3s 6 golpes, ataca ambos
     os inimigos causando grande dano e congelando-os instantaneamente."
+  descricaoResumidaSkill: Causa 40 de dano na carta alvo e aplica +1 ponto de Congelamento
+    (3 pontos congelam).
+  descricaoResumidaUlt: Causa 70 de dano em ambas as cartas inimigas e congela-as
+    instantaneamente.
   cargasNecessariasSkill: 3
   cargasNecessariasUlt: 6
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  alcanceSkill: 0
+  alcanceUlt: 1
+  skillPodeCritar: 0
+  danoBaseSkill: 40
+  danoCriticoSkill: 0
+  valorCuraSkill: 0
+  valorBuffEscudoSkill: 0
+  ultPodeCritar: 0
+  danoBaseUlt: 70
+  danoCriticoUlt: 0
+  valorCuraUlt: 0
+  valorBuffEscudoUlt: 0
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 0
+  buffRaivaSkill: 0
+  buffForcaUlt: 0
+  buffVelocidadeUlt: 0
+  buffIntelectoUlt: 0
+  buffDestrezaUlt: 0
+  buffRaivaUlt: 0

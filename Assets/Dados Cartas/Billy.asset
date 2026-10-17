@@ -25,8 +25,31 @@ MonoBehaviour:
     mais forte apenas em um inimigo.\n\nUlt: Ap\xF3s 6 golpes, ataca ambos os inimigos
     com um ataque forte e aumenta sua Destreza, For\xE7a e Velocidade em +5 cada
     por um turno."
+  descricaoResumidaSkill: Concentra um tiro pesado causando 50 de dano apenas na
+    carta alvo.
+  descricaoResumidaUlt: "Causa 65 de dano em ambas as cartas inimigas e aumenta Destreza,
+    For\xE7a e Velocidade em +5 por 1 turno."
   cargasNecessariasSkill: 3
   cargasNecessariasUlt: 6
-  vidaBase: 100
-  danoMinimo: 10
-  danoMaximo: 20
+  alcanceSkill: 0
+  alcanceUlt: 1
+  skillPodeCritar: 0
+  danoBaseSkill: 50
+  danoCriticoSkill: 0
+  valorCuraSkill: 0
+  valorBuffEscudoSkill: 0
+  ultPodeCritar: 0
+  danoBaseUlt: 65
+  danoCriticoUlt: 0
+  valorCuraUlt: 0
+  valorBuffEscudoUlt: 0
+  buffForcaSkill: 0
+  buffVelocidadeSkill: 0
+  buffIntelectoSkill: 0
+  buffDestrezaSkill: 0
+  buffRaivaSkill: 0
+  buffForcaUlt: 5
+  buffVelocidadeUlt: 5
+  buffIntelectoUlt: 0
+  buffDestrezaUlt: 5
+  buffRaivaUlt: 0
