@@ -66,10 +66,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 5698455893682913087, guid: 6620178d26ed58c42be9a233505936b6, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 1
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -289,15 +289,17 @@ MonoBehaviour:
   textoRaiva: {fileID: 601290536184479975}
   coracaoPreenchimento: {fileID: 7758474594333232666}
   textoHP: {fileID: 2696846552664996308}
+  groupEscudo: {fileID: 7624217540966162641}
+  imagemPreenchimentoEscudo: {fileID: 3934909099846168252}
+  textoEscudo: {fileID: 4703352935365168256}
   containerHab: {fileID: 7780220753732937643}
   containerUlt: {fileID: 8091775761430021980}
   prefabIconoCarga: {fileID: 5156381171797113928, guid: 5527c8c8ed10c6c4da41fbea1ae4fd58, type: 3}
+  prefabTextoFlutuante: {fileID: 7663331723973087946, guid: 115d5499c62099a4fa9c384924b825f3, type: 3}
   spriteSkillApagada: {fileID: 1786771335615075908, guid: d03f6d1cacc0d7a43b493658b0ce1d56, type: 3}
   spriteSkillAcesa: {fileID: 3686360468318086195, guid: 0894e5ddd3e26fe44b73b4361746a58b, type: 3}
   spriteUltApagada: {fileID: 5510815393494007241, guid: 7ee33ee3080a32f4e838df4ea6ec5563, type: 3}
   spriteUltAcesa: {fileID: -5252383586259273396, guid: c8df464bc669bd648a8a43399df1fa52, type: 3}
-  groupEscudo: {fileID: 7624217540966162641}
-  textoEscudo: {fileID: 4703352935365168256}
 --- !u!1 &2639350014607023368
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,10 +832,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 4796144587087761550, guid: c92eee22447dca440a836fc8a4b2b856, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 1
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
