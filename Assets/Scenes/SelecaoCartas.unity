@@ -150,7 +150,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1125058534}
-  - {fileID: 569680333}
   m_Father: {fileID: 1845644392}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -1067,6 +1066,7 @@ GameObject:
   - component: {fileID: 439132836}
   - component: {fileID: 439132835}
   - component: {fileID: 439132834}
+  - component: {fileID: 439132837}
   m_Layer: 5
   m_Name: CardSlot (8)
   m_TagString: Untagged
@@ -1188,6 +1188,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439132832}
   m_CullTransparentMesh: 1
+--- !u!114 &439132837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439132832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &440185497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,143 +1277,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 440185497}
   m_CullTransparentMesh: 1
---- !u!1 &569680330
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 569680333}
-  - component: {fileID: 569680332}
-  - component: {fileID: 569680331}
-  m_Layer: 5
-  m_Name: Texto_Tempo
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &569680331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 569680330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: 60
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9fc826ee4ec64b64688058865ffde2c6, type: 2}
-  m_sharedMaterial: {fileID: 8067734401232249137, guid: 9fc826ee4ec64b64688058865ffde2c6, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 79.9
-  m_fontSizeBase: 79.9
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 1
-  m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_characterHorizontalScale: 1
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_EmojiFallbackSupport: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &569680332
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 569680330}
-  m_CullTransparentMesh: 1
---- !u!224 &569680333
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 569680330}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 34250223}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.017205, y: -159}
-  m_SizeDelta: {x: 135.996, y: 130.604}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &581815225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2372,6 +2249,7 @@ GameObject:
   - component: {fileID: 1063735343}
   - component: {fileID: 1063735342}
   - component: {fileID: 1063735341}
+  - component: {fileID: 1063735344}
   m_Layer: 5
   m_Name: CardSlot (1)
   m_TagString: Untagged
@@ -2493,6 +2371,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1063735339}
   m_CullTransparentMesh: 1
+--- !u!114 &1063735344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063735339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1074910881
 GameObject:
   m_ObjectHideFlags: 0
@@ -2505,6 +2397,7 @@ GameObject:
   - component: {fileID: 1074910885}
   - component: {fileID: 1074910884}
   - component: {fileID: 1074910883}
+  - component: {fileID: 1074910886}
   m_Layer: 5
   m_Name: CardSlot (4)
   m_TagString: Untagged
@@ -2626,6 +2519,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1074910881}
   m_CullTransparentMesh: 1
+--- !u!114 &1074910886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074910881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1079345073
 GameObject:
   m_ObjectHideFlags: 0
@@ -2880,6 +2787,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1125058534}
   - component: {fileID: 1125058536}
+  - component: {fileID: 1125058537}
   - component: {fileID: 1125058535}
   m_Layer: 5
   m_Name: Texto_Jogador
@@ -2904,7 +2812,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.017223, y: -82}
+  m_AnchoredPosition: {x: -0.000018312, y: -113}
   m_SizeDelta: {x: 1078.7, y: 130.604}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1125058535
@@ -3007,6 +2915,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125058533}
   m_CullTransparentMesh: 1
+--- !u!114 &1125058537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125058533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1154239082
 GameObject:
   m_ObjectHideFlags: 0
@@ -3283,6 +3205,7 @@ GameObject:
   - component: {fileID: 1312897876}
   - component: {fileID: 1312897875}
   - component: {fileID: 1312897874}
+  - component: {fileID: 1312897877}
   m_Layer: 5
   m_Name: CardSlot (2)
   m_TagString: Untagged
@@ -3404,6 +3327,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1312897872}
   m_CullTransparentMesh: 1
+--- !u!114 &1312897877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312897872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1320477534
 GameObject:
   m_ObjectHideFlags: 0
@@ -3416,6 +3353,7 @@ GameObject:
   - component: {fileID: 1320477538}
   - component: {fileID: 1320477537}
   - component: {fileID: 1320477536}
+  - component: {fileID: 1320477539}
   m_Layer: 5
   m_Name: CardSlot (5)
   m_TagString: Untagged
@@ -3537,6 +3475,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1320477534}
   m_CullTransparentMesh: 1
+--- !u!114 &1320477539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320477534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1338867539
 GameObject:
   m_ObjectHideFlags: 0
@@ -3549,6 +3501,7 @@ GameObject:
   - component: {fileID: 1338867543}
   - component: {fileID: 1338867542}
   - component: {fileID: 1338867541}
+  - component: {fileID: 1338867544}
   m_Layer: 5
   m_Name: CardSlot (7)
   m_TagString: Untagged
@@ -3670,6 +3623,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1338867539}
   m_CullTransparentMesh: 1
+--- !u!114 &1338867544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338867539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1388348634
 GameObject:
   m_ObjectHideFlags: 0
@@ -3836,6 +3803,7 @@ GameObject:
   - component: {fileID: 1455714798}
   - component: {fileID: 1455714797}
   - component: {fileID: 1455714796}
+  - component: {fileID: 1455714799}
   m_Layer: 5
   m_Name: CardSlot (3)
   m_TagString: Untagged
@@ -3957,6 +3925,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1455714794}
   m_CullTransparentMesh: 1
+--- !u!114 &1455714799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455714794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1489955097
 GameObject:
   m_ObjectHideFlags: 0
@@ -3969,6 +3951,7 @@ GameObject:
   - component: {fileID: 1489955101}
   - component: {fileID: 1489955100}
   - component: {fileID: 1489955099}
+  - component: {fileID: 1489955102}
   m_Layer: 5
   m_Name: CardSlot (6)
   m_TagString: Untagged
@@ -4090,6 +4073,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1489955097}
   m_CullTransparentMesh: 1
+--- !u!114 &1489955102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489955097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1496781551
 GameObject:
   m_ObjectHideFlags: 0
@@ -4102,6 +4099,7 @@ GameObject:
   - component: {fileID: 1496781555}
   - component: {fileID: 1496781554}
   - component: {fileID: 1496781553}
+  - component: {fileID: 1496781556}
   m_Layer: 5
   m_Name: CardSlot
   m_TagString: Untagged
@@ -4223,6 +4221,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1496781551}
   m_CullTransparentMesh: 1
+--- !u!114 &1496781556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496781551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &1540143592
 GameObject:
   m_ObjectHideFlags: 0
@@ -4561,7 +4573,7 @@ MonoBehaviour:
   - {fileID: 807058357}
   - {fileID: 440185499}
   - {fileID: 2135948271}
-  scrollRectCartas: {fileID: 1121642332}
+  scrollRectCardas: {fileID: 1121642332}
   escalaDestaque: 1.15
   duracaoAnimacao: 0.2
   painelDetalhes: {fileID: 1157833550}
@@ -4569,8 +4581,6 @@ MonoBehaviour:
   textoLore: {fileID: 734874185}
   textoHabilidades: {fileID: 211637373}
   textoBotaoLoreHab: {fileID: 1079345075}
-  tempoPorTurno: 60
-  textoTempo: {fileID: 569680331}
 --- !u!4 &1727311754
 Transform:
   m_ObjectHideFlags: 0
@@ -5115,6 +5125,7 @@ GameObject:
   - component: {fileID: 2060421877}
   - component: {fileID: 2060421876}
   - component: {fileID: 2060421875}
+  - component: {fileID: 2060421878}
   m_Layer: 5
   m_Name: CardSlot (9)
   m_TagString: Untagged
@@ -5236,6 +5247,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060421873}
   m_CullTransparentMesh: 1
+--- !u!114 &2060421878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060421873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5364de2d4ad804cbf29be70c8f2399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CartaFlutuanteUI
+  anguloMaximo: 1.8
+  duracaoCiclo: 4.2
 --- !u!1 &2061960073
 GameObject:
   m_ObjectHideFlags: 0

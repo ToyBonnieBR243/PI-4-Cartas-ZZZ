@@ -78,7 +78,7 @@ public class CartaBatalhaUI : MonoBehaviour
         if (textoDestreza != null) textoDestreza.text = atributos.destreza + " DT";
         if (textoRaiva != null) textoRaiva.text = atributos.raiva + " RV";
 
-        VidaMaxima = 100;
+        VidaMaxima = 200;
         VidaAtual = VidaMaxima;
         EscudoAtual = 0;
         EscudoMaximo = 0;

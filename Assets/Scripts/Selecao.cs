@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement; // Necessário para trocar de cena
+using UnityEngine.SceneManagement;
 
 public class GerenciadorSelecao : MonoBehaviour
 {
@@ -26,13 +26,13 @@ public class GerenciadorSelecao : MonoBehaviour
     [Header("Referências da Grade de Cartas")]
     public Button[] botoesSlots;
     public Image[] imagensPersonagens;
-    public ScrollRect scrollRectCartas;
+    public ScrollRect scrollRectCardas; // <-- Variável declarada corretamente aqui
 
-    [Header("Configurações do DOTween")]
+    [Header("Configurações do DOTween (Destaque)")]
     public float escalaDestaque = 1.15f;
     public float duracaoAnimacao = 0.2f;
 
-    [Header("Painel e Textos")]
+    [Header("Painel e Textos de Detalhes")]
     public GameObject painelDetalhes;
     public TextMeshProUGUI textoNome;
     public TextMeshProUGUI textoLore;
@@ -42,57 +42,11 @@ public class GerenciadorSelecao : MonoBehaviour
     public TextMeshProUGUI textoBotaoLoreHab;
     private bool mostrandoLore = true;
 
-    [Header("Sistema de Tempo por Turno")]
-    public float tempoPorTurno = 60f;
-    private float tempoRestante;
-    public TextMeshProUGUI textoTempo;
-    private bool cronometroAtivo = false;
-
     private void Start()
     {
         cartasEscolhidas = new bool[todasAsCartas.Length];
         AtualizarIndicadorJogador();
         ResetarEfeitosCartas();
-
-        tempoRestante = tempoPorTurno;
-        cronometroAtivo = true;
-    }
-
-    private void Update()
-    {
-        if (cronometroAtivo && totalCartasEscolhidas < 4)
-        {
-            tempoRestante -= Time.deltaTime;
-
-            if (textoTempo != null)
-            {
-                textoTempo.text = Mathf.Ceil(tempoRestante).ToString("0") + "s";
-            }
-
-            if (tempoRestante <= 0)
-            {
-                TempoEsgotado();
-            }
-        }
-    }
-
-    private void TempoEsgotado()
-    {
-        List<int> cartasDisponiveis = new List<int>();
-        for (int i = 0; i < cartasEscolhidas.Length; i++)
-        {
-            if (!cartasEscolhidas[i])
-            {
-                cartasDisponiveis.Add(i);
-            }
-        }
-
-        if (cartasDisponiveis.Count > 0)
-        {
-            int indiceAleatorio = cartasDisponiveis[Random.Range(0, cartasDisponiveis.Count)];
-            indiceCartaAtual = indiceAleatorio;
-            SelecionarCarta();
-        }
     }
 
     public void AbrirPainel(int indice)
@@ -103,6 +57,7 @@ public class GerenciadorSelecao : MonoBehaviour
         mostrandoLore = true;
 
         DestacarCartaComDOTween(indice);
+
         if (painelDetalhes != null) painelDetalhes.SetActive(true);
         AtualizarInterface();
     }
@@ -167,7 +122,6 @@ public class GerenciadorSelecao : MonoBehaviour
         if (botoesSlots != null && indiceCartaAtual < botoesSlots.Length && botoesSlots[indiceCartaAtual] != null)
         {
             Transform slotTransform = botoesSlots[indiceCartaAtual].transform;
-            slotTransform.DOKill();
             slotTransform.localScale = Vector3.one;
             botoesSlots[indiceCartaAtual].interactable = false;
         }
@@ -179,8 +133,6 @@ public class GerenciadorSelecao : MonoBehaviour
 
         FecharPainel();
         totalCartasEscolhidas++;
-
-        tempoRestante = tempoPorTurno;
 
         // Regra de Turnos Alternados (P1 -> P2 -> P1 -> P2)
         if (totalCartasEscolhidas == 1 || totalCartasEscolhidas == 3)
@@ -194,10 +146,6 @@ public class GerenciadorSelecao : MonoBehaviour
         else if (totalCartasEscolhidas >= 4)
         {
             jogadorAtual = 0;
-            cronometroAtivo = false;
-            if (textoTempo != null) textoTempo.text = "";
-
-            // Carrega a cena de distribuição de pontos
             SceneManager.LoadScene("TelaDistribuicao");
             return;
         }
@@ -219,11 +167,17 @@ public class GerenciadorSelecao : MonoBehaviour
         {
             Transform slot = botoesSlots[indice].transform;
 
+            // Aumenta a escala levemente para dar foco visual
             slot.DOScale(Vector3.one * escalaDestaque, duracaoAnimacao)
                 .SetEase(Ease.OutBack)
-                .SetUpdate(true);
+                .SetUpdate(true)
+                .OnComplete(() => {
+                    // Garante que o balanço continua rodando após o zoom
+                    CartaFlutuanteUI flutuante = slot.GetComponent<CartaFlutuanteUI>();
+                    if (flutuante != null) flutuante.IniciarEfeitoFlutuante();
+                });
 
-            if (scrollRectCartas != null)
+            if (scrollRectCardas != null)
             {
                 int linhaAtual = indice / 2;
                 int totalLinhas = Mathf.CeilToInt(botoesSlots.Length / 2f);
@@ -231,7 +185,7 @@ public class GerenciadorSelecao : MonoBehaviour
                 if (totalLinhas > 1)
                 {
                     float posicaoScroll = 1f - ((float)linhaAtual / (totalLinhas - 1));
-                    scrollRectCartas.DOVerticalNormalizedPos(posicaoScroll, duracaoAnimacao)
+                    scrollRectCardas.DOVerticalNormalizedPos(posicaoScroll, duracaoAnimacao)
                         .SetEase(Ease.OutCubic);
                 }
             }
@@ -246,8 +200,11 @@ public class GerenciadorSelecao : MonoBehaviour
         {
             if (botoesSlots[i] != null)
             {
-                botoesSlots[i].transform.DOKill();
                 botoesSlots[i].transform.DOScale(Vector3.one, duracaoAnimacao);
+
+                // Reinicia o balanço em todas as cartas para evitar que fiquem travadas
+                CartaFlutuanteUI flutuante = botoesSlots[i].GetComponent<CartaFlutuanteUI>();
+                if (flutuante != null) flutuante.IniciarEfeitoFlutuante();
             }
         }
     }
