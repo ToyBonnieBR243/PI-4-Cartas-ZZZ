@@ -327,24 +327,18 @@ public class GerenciadorBatalha : MonoBehaviour
     {
         if (atacante == null || alvo == null) return;
 
-        // Passiva Astra Yao: Não ataca fisicamente
-        if (atacante.CartaDados.nomePersonagem.Trim() == "Astra Yao")
-        {
-            return;
-        }
+        // Astra Yao não ataca
+        if (atacante.CartaDados != null && atacante.CartaDados.nomePersonagem.Trim() == "Astra Yao") return;
 
-        // Verificação se o atacante está incapaz de agir (Congelado ou Atordoado)
-        if (atacante.Status != null && (atacante.Status.estaCongelado || atacante.Status.estaAtordoado))
-        {
-            return;
-        }
+        // Se estiver incapacitado por status
+        if (atacante.Status != null && (atacante.Status.estaCongelado || atacante.Status.estaAtordoado)) return;
 
-        string nomeAtacante = atacante.CartaDados.nomePersonagem.Trim();
-        string nomeAlvo = alvo.CartaDados.nomePersonagem.Trim();
+        string nomeAtacante = (atacante.CartaDados != null) ? atacante.CartaDados.nomePersonagem.Trim() : "";
+        string nomeAlvo = (alvo.CartaDados != null) ? alvo.CartaDados.nomePersonagem.Trim() : "";
 
-        // --- CÁLCULO DO PONTO DE DESTINO DO ATAQUE (Meio da tela se for em área) ---
+        // Ponto de destino
         Vector3 posicaoDestinoAtaque = alvo.transform.position;
-        if (nomeAtacante == "Billy Kid" || atacante.CartaDados.alcanceSkill == TipoAlcanceAtaque.AmbasAsCartas)
+        if (nomeAtacante == "Billy Kid" || (atacante.CartaDados != null && atacante.CartaDados.alcanceSkill == TipoAlcanceAtaque.AmbasAsCartas))
         {
             CartaBatalhaUI[] timeInimigo = (atacante == cartasP1[0] || atacante == cartasP1[1]) ? cartasP2 : cartasP1;
             if (timeInimigo[0] != null && timeInimigo[1] != null)
@@ -353,22 +347,22 @@ public class GerenciadorBatalha : MonoBehaviour
             }
         }
 
-        // Animação de Investida até o Alvo (ou Meio) e Retorno
+        // Investida
         atacante.AnimarInvestidaEVoltar(posicaoDestinoAtaque, () =>
         {
-            // 1. CHANCE DE ESQUIVA BASEADA EM INTELECTO (+ bônus da Ellen Joe + Confusão do alvo)
-            int intelectoEfetivoAlvo = alvo.Atributos.intelecto + (alvo.Status != null ? alvo.Status.bonusIntelectoEllen : 0);
-            float chanceEsquiva = intelectoEfetivoAlvo * 0.03f;
+            // --- PROTEÇÃO CONTRA NULL REFERENCE NO IMPACTO ---
+            if (alvo == null || atacante == null) return;
 
-            if (atacante.Status != null && atacante.Status.estaConfuso)
-            {
-                chanceEsquiva += 0.20f;
-            }
+            // 1. Esquiva
+            int intAlvo = (alvo.Atributos != null) ? alvo.Atributos.intelecto : 0;
+            int bonusEllen = (alvo.Status != null) ? alvo.Status.bonusIntelectoEllen : 0;
+            float chanceEsquiva = (intAlvo + bonusEllen) * 0.03f;
+
+            if (atacante.Status != null && atacante.Status.estaConfuso) chanceEsquiva += 0.20f;
 
             bool esquivou = Random.value < chanceEsquiva;
 
-            // Passiva Nicole Demara: A cada 15 segundos, rouba e garante o acerto se fosse errar
-            if (esquivou && nomeAtacante == "Nicole Demara" && atacante.Status.tempoRouboNicoleRestante <= 0f)
+            if (esquivou && nomeAtacante == "Nicole Demara" && atacante.Status != null && atacante.Status.tempoRouboNicoleRestante <= 0f)
             {
                 esquivou = false;
                 atacante.Status.tempoRouboNicoleRestante = 15f;
@@ -377,73 +371,65 @@ public class GerenciadorBatalha : MonoBehaviour
             if (esquivou)
             {
                 alvo.AnimarEsquiva(atacante.transform.position - alvo.transform.position);
-
-                if (nomeAlvo == "Ellen Joe" && alvo.Status != null)
-                {
-                    alvo.Status.bonusIntelectoEllen += 2;
-                }
+                if (nomeAlvo == "Ellen Joe" && alvo.Status != null) alvo.Status.bonusIntelectoEllen += 2;
                 return;
             }
 
-            if (nomeAlvo == "Ellen Joe" && alvo.Status != null)
-            {
-                alvo.Status.bonusIntelectoEllen = 0;
-            }
+            if (nomeAlvo == "Ellen Joe" && alvo.Status != null) alvo.Status.bonusIntelectoEllen = 0;
 
-            // 2. CÁLCULO DE DANO E PASSIVA DO BILLY KID
-            int danoBase = Random.Range(10 + (atacante.Atributos.forca * 2), 21 + (atacante.Atributos.forca * 2));
+            // 2. Cálculo de Dano e Crítico
+            int forcaAtacante = (atacante.Atributos != null) ? atacante.Atributos.forca : 0;
+            int destrezaAtacante = (atacante.Atributos != null) ? atacante.Atributos.destreza : 0;
+            int raivaAtacante = (atacante.Atributos != null) ? atacante.Atributos.raiva : 0;
 
-            if (nomeAtacante == "Billy Kid")
-            {
-                danoBase = Mathf.Max(1, danoBase / 2);
-            }
+            int danoBase = Random.Range(10 + (forcaAtacante * 2), 21 + (forcaAtacante * 2));
+            if (nomeAtacante == "Billy Kid") danoBase = Mathf.Max(1, danoBase / 2);
 
-            // 3. CRÍTICO (Destreza * 7%) E FÚRIA/RAIVA (HP < 30%)
-            float chanceCritico = atacante.Atributos.destreza * 0.07f;
+            float chanceCritico = destrezaAtacante * 0.07f;
             bool foiCritico = Random.value < chanceCritico;
 
-            if (foiCritico)
-            {
-                danoBase = Mathf.RoundToInt(danoBase * 1.5f);
-            }
+            if (foiCritico) danoBase = Mathf.RoundToInt(danoBase * 1.5f);
 
-            if ((float)atacante.VidaAtual / atacante.VidaMaxima < 0.30f)
+            if (atacante.VidaMaxima > 0 && ((float)atacante.VidaAtual / atacante.VidaMaxima) < 0.30f)
             {
-                float bonusRaiva = 1f + (atacante.Atributos.raiva * 0.06f);
+                float bonusRaiva = 1f + (raivaAtacante * 0.06f);
                 danoBase = Mathf.RoundToInt(danoBase * bonusRaiva);
             }
 
-            // 4. IMPACTO COM CÂMERA LENTA RÁPIDA NO CRÍTICO E SHAKE REFORÇADO
+            // 3. Efeitos Visuais e Shake Seguro (Sem quebrar se Camera.main for null)
             if (foiCritico)
             {
                 alvo.PiscarCarta(Color.red);
-                alvo.MostrarTextoPopUp($"CRÍTICO!", Color.red);
+                alvo.MostrarTextoPopUp("CRÍTICO!", Color.red);
 
-                // Câmera lenta muito rápida (Slow-Motion arcade)
                 StartCoroutine(RotinaCameraLentaCritico(0.15f));
 
-                // Shake bem forte
-                Camera.main.transform.DOShakePosition(0.35f, strength: 45f, vibrato: 25).SetUpdate(true);
-                Camera.main.transform.DOShakeRotation(0.2f, strength: 6f).SetUpdate(true);
+                if (Camera.main != null)
+                {
+                    Camera.main.transform.DOShakePosition(0.35f, strength: 45f, vibrato: 25).SetUpdate(true);
+                }
             }
             else
             {
                 alvo.PiscarCarta(Color.white);
-                alvo.MostrarTextoPopUp($"-{danoBase}", Color.white);
 
-                // Shake forte para ataque normal
-                Camera.main.transform.DOShakePosition(0.2f, strength: 25f, vibrato: 18);
+                if (Camera.main != null)
+                {
+                    Camera.main.transform.DOShakePosition(0.2f, strength: 25f, vibrato: 18);
+                }
             }
 
-            // Aplica o Dano
+            // 4. APLICAÇÃO EFETIVA DO DANO E CARGAS
             alvo.ReceberDano(danoBase);
 
-            // 5. PROCESSAMENTO DE PASSIVAS APÓS O ACERTO DO GOLPE
+            atacante.AdicionarCargaSkill(1);
+            atacante.AdicionarCargaUlt(1);
+
+            // 5. Passivas após acerto
             if (atacante.Status != null)
             {
                 atacante.Status.contagemGolpesAcertados++;
 
-                // Passiva Hoshimi Miyabi: Congela a carta alvo após 5 golpes (Com cor Ciano)
                 if (nomeAtacante == "Hoshimi Miyabi" && atacante.Status.contagemGolpesAcertados >= 5)
                 {
                     if (alvo.Status != null)
@@ -455,23 +441,20 @@ public class GerenciadorBatalha : MonoBehaviour
                     atacante.Status.contagemGolpesAcertados = 0;
                 }
 
-                // Passiva Anby: A cada 4 golpes, aplica Choque
                 if (nomeAtacante == "Anby" && atacante.Status.contagemGolpesAcertados >= 4)
                 {
-                    alvo.Atributos.velocidade = Mathf.Max(0, alvo.Atributos.velocidade - 1);
-                    alvo.MostrarTextoPopUp("CHOQUE! (-1 VL)", new Color(1f, 0.85f, 0f));
+                    if (alvo.Atributos != null) alvo.Atributos.velocidade = Mathf.Max(0, alvo.Atributos.velocidade - 1);
+                    alvo.MostrarTextoPopUp("CHOQUE!", new Color(1f, 0.85f, 0f));
                     atacante.Status.contagemGolpesAcertados = 0;
                 }
             }
 
-            // Passiva N.º 11: Inimigo atacado fica Queimando
             if (nomeAtacante == "N.º 11" && alvo.Status != null)
             {
                 alvo.Status.AplicarQueimacao(2);
                 alvo.MostrarTextoPopUp("QUEIMANDO!", new Color(1f, 0.4f, 0f));
             }
 
-            // Passiva Phaethon e Jane Doe ao serem atacados
             if (alvo.Status != null)
             {
                 if (nomeAlvo == "Phaethon" && Random.value < 0.15f)
@@ -485,9 +468,6 @@ public class GerenciadorBatalha : MonoBehaviour
                     atacante.MostrarTextoPopUp("CONFUSO!", new Color(0.8f, 0.3f, 1f));
                 }
             }
-
-            atacante.AdicionarCargaSkill(1);
-            atacante.AdicionarCargaUlt(1);
         });
     }
 

@@ -21,12 +21,12 @@ public class CartaBatalhaUI : MonoBehaviour
     public TextMeshProUGUI textoRaiva;
 
     [Header("Sistema de Vida (Coração)")]
-    public Image coracaoPreenchimento; // Image Type = Filled, Fill Method = Vertical, Fill Origin = Bottom
+    public Image coracaoPreenchimento;
     public TextMeshProUGUI textoHP;
 
     [Header("Sistema de Escudo")]
     public CanvasGroup groupEscudo;
-    public Image imagemPreenchimentoEscudo; // Image Type = Filled, Fill Method = Vertical, Fill Origin = Bottom
+    public Image imagemPreenchimentoEscudo;
     public TextMeshProUGUI textoEscudo;
 
     [Header("Containers de Cargas")]
@@ -78,7 +78,6 @@ public class CartaBatalhaUI : MonoBehaviour
         if (textoDestreza != null) textoDestreza.text = atributos.destreza + " DT";
         if (textoRaiva != null) textoRaiva.text = atributos.raiva + " RV";
 
-        // Trava Vida base em 100
         VidaMaxima = 100;
         VidaAtual = VidaMaxima;
         EscudoAtual = 0;
@@ -89,6 +88,8 @@ public class CartaBatalhaUI : MonoBehaviour
         AtualizarInterfaceVida(false);
         AtualizarInterfaceEscudo(false);
         AtualizarCargas();
+
+        Debug.Log($"[DEBUG-UI] Carta inicializada: {cartaData.nomePersonagem} | HP Inicial: {VidaAtual}");
     }
 
     private void GerarIconesCargas()
@@ -114,12 +115,11 @@ public class CartaBatalhaUI : MonoBehaviour
         }
     }
 
-    // --- MANIPULAÇÃO DE DANO, CURA E ESCUDO ---
     public void ReceberDano(int quantidadeDano)
     {
+        Debug.Log($"[DEBUG-UI] ReceberDano chamado em {gameObject.name}. Dano recebido: {quantidadeDano}. HP antes: {VidaAtual} | Escudo antes: {EscudoAtual}");
         int danoRestante = quantidadeDano;
 
-        // 1. Dano no Escudo
         if (EscudoAtual > 0)
         {
             if (danoRestante <= EscudoAtual)
@@ -131,14 +131,15 @@ public class CartaBatalhaUI : MonoBehaviour
             {
                 danoRestante -= EscudoAtual;
                 EscudoAtual = 0;
+                EscudoMaximo = 0;
             }
             AtualizarInterfaceEscudo(true);
         }
 
-        // 2. Dano na Vida
         if (danoRestante > 0)
         {
             VidaAtual = Mathf.Max(0, VidaAtual - danoRestante);
+            Debug.Log($"[DEBUG-UI] HP após dano em {gameObject.name}: {VidaAtual}");
             AtualizarInterfaceVida(true);
         }
     }
@@ -146,7 +147,7 @@ public class CartaBatalhaUI : MonoBehaviour
     public void SetarEscudoInicial(int valorEscudo)
     {
         EscudoAtual = valorEscudo;
-        EscudoMaximo = valorEscudo; // Define o valor cheio como o limite máximo do escudo
+        EscudoMaximo = valorEscudo;
         AtualizarInterfaceEscudo(false);
     }
 
@@ -163,12 +164,19 @@ public class CartaBatalhaUI : MonoBehaviour
         AtualizarInterfaceVida(true);
     }
 
-    // --- INTERFACE VISUAL DE VIDA E ESCUDO ---
     private void AtualizarInterfaceVida(bool animar)
     {
         float pctVida = Mathf.Clamp01((float)VidaAtual / VidaMaxima);
+        Debug.Log($"[DEBUG-UI] Atualizando UI Vida de {gameObject.name} -> Texto: {VidaAtual} HP | Pct Fill: {pctVida}");
 
-        if (textoHP != null) textoHP.text = $"{VidaAtual} HP";
+        if (textoHP != null)
+        {
+            textoHP.text = $"{VidaAtual} HP";
+        }
+        else
+        {
+            Debug.LogWarning($"[AVISO-UI] 'textoHP' está nulo no Inspector de {gameObject.name}!");
+        }
 
         if (coracaoPreenchimento != null)
         {
@@ -177,6 +185,10 @@ public class CartaBatalhaUI : MonoBehaviour
                 coracaoPreenchimento.DOFillAmount(pctVida, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true);
             else
                 coracaoPreenchimento.fillAmount = pctVida;
+        }
+        else
+        {
+            Debug.LogWarning($"[AVISO-UI] 'coracaoPreenchimento' está nulo no Inspector de {gameObject.name}!");
         }
     }
 
@@ -192,10 +204,9 @@ public class CartaBatalhaUI : MonoBehaviour
             if (textoEscudo != null)
             {
                 textoEscudo.text = $"{EscudoAtual} DEF";
-                textoEscudo.color = new Color(0f, 0.85f, 1f, 1f); // Ciano Vivo
+                textoEscudo.color = new Color(0f, 0.85f, 1f, 1f);
             }
 
-            // Garante que o escudo comece em 1.0 (100% cheio) quando gerado
             float pctEscudo = (EscudoMaximo > 0) ? Mathf.Clamp01((float)EscudoAtual / EscudoMaximo) : 1f;
 
             if (imagemPreenchimentoEscudo != null)
@@ -221,14 +232,12 @@ public class CartaBatalhaUI : MonoBehaviour
         }
     }
 
-    // --- ANIMAÇÕES DE MOVIMENTO BASEADAS NO SLOT COMO ÂNCORA ---
     public void AnimarInvestidaEVoltar(Vector3 posicaoAlvoWorld, TweenCallback aoAtingirImpacto)
     {
         RectTransform rectTransform = GetComponent<RectTransform>();
         Vector3 posLocalOriginal = Vector3.zero;
 
         Vector3 posAlvoLocal = transform.parent.InverseTransformPoint(posicaoAlvoWorld);
-
         Vector3 direcao = (posAlvoLocal - posLocalOriginal).normalized;
         float distanciaDeslocamento = Vector3.Distance(posLocalOriginal, posAlvoLocal);
 
@@ -250,7 +259,6 @@ public class CartaBatalhaUI : MonoBehaviour
     {
         RectTransform rectTransform = GetComponent<RectTransform>();
         Vector3 posLocalOriginal = Vector3.zero;
-
         Vector3 posRecuoExagerado = posLocalOriginal - (direcaoInimigo.normalized * 120f);
 
         Sequence seqEsquiva = DOTween.Sequence();
@@ -303,12 +311,14 @@ public class CartaBatalhaUI : MonoBehaviour
     public void AdicionarCargaSkill(int quantidade = 1)
     {
         CargasSkillAtuais = Mathf.Min(CartaDados.cargasNecessariasSkill, CargasSkillAtuais + quantidade);
+        Debug.Log($"[DEBUG-Cargas] {CartaDados.nomePersonagem} ganhou carga de Skill. Total: {CargasSkillAtuais}");
         AtualizarCargas();
     }
 
     public void AdicionarCargaUlt(int quantidade = 1)
     {
         CargasUltAtuais = Mathf.Min(CartaDados.cargasNecessariasUlt, CargasUltAtuais + quantidade);
+        Debug.Log($"[DEBUG-Cargas] {CartaDados.nomePersonagem} ganhou carga de Ult. Total: {CargasUltAtuais}");
         AtualizarCargas();
     }
 
