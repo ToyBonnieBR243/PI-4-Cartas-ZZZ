@@ -5,6 +5,13 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 
+public enum AcaoCartaBatalha
+{
+    Nenhuma,
+    Atacar,
+    Defender
+}
+
 public class GerenciadorBatalha : MonoBehaviour
 {
     [Header("Slots na Arena (Transforms do Canvas)")]
@@ -16,15 +23,9 @@ public class GerenciadorBatalha : MonoBehaviour
     [Header("Prefab da Carta de Batalha")]
     public GameObject prefabCartaBatalha;
 
-    [Header("UI de Controle do Jogador 1 (Azul)")]
-    public Button botaoFinalizarP1;
-    public Button botaoDefenderP1;
-    public TextMeshProUGUI textoBotaoDefenderP1;
-
-    [Header("UI de Controle do Jogador 2 (Vermelho)")]
-    public Button botaoFinalizarP2;
-    public Button botaoDefenderP2;
-    public TextMeshProUGUI textoBotaoDefenderP2;
+    [Header("Containers / Painéis de Controle de UI")]
+    public GameObject painelControleP1; // Pai dos botões do P1
+    public GameObject painelControleP2; // Pai dos botões do P2
 
     [Header("UI Geral")]
     public TextMeshProUGUI textoTurno;
@@ -32,62 +33,25 @@ public class GerenciadorBatalha : MonoBehaviour
     [Header("Fallback para Teste Direto na Cena")]
     public CartaData[] cartasFallbackParaTeste;
 
-    // Referências das instâncias ativas
+    // Instâncias das Cartas
     private CartaBatalhaUI[] cartasP1 = new CartaBatalhaUI[2];
     private CartaBatalhaUI[] cartasP2 = new CartaBatalhaUI[2];
 
-    // Registra se as cartas estão em postura defensiva na rodada
-    private bool[] emPosturaDefensivaP1 = new bool[2];
-    private bool[] emPosturaDefensivaP2 = new bool[2];
-    private bool p1EmDefesaGlobal = false;
-    private bool p2EmDefesaGlobal = false;
+    // Escolhas de Ação da rodada
+    private AcaoCartaBatalha[] acoesP1 = new AcaoCartaBatalha[2];
+    private AcaoCartaBatalha[] acoesP2 = new AcaoCartaBatalha[2];
 
-    // Confirmações de encerramento da fase de planejamento
-    private bool p1Pronto = false;
-    private bool p2Pronto = false;
-
-    // Temporizadores independentes para cooldown de ataque
-    private float[] cdAtaqueP1 = new float[2];
-    private float[] cdAtaqueP2 = new float[2];
-
-    // Estado da partida
+    // Estados de Escolha do Turno
+    private int jogadorDecidindoAtual = 1; // 1 para P1, 2 para P2
     private int numeroRodada = 1;
-    private bool emTurnoAtivo = false;
-    private bool emPausaHabilidade = false;
-    private float duracaoTurno = 12f;
-    private float tempoTurnoRestante;
-
-    public EstadoStatusCarta Status { get; private set; }
+    private bool emResolucaoDeTurno = false;
 
     private void Start()
     {
         CarregarEInicializarCartas();
-        IniciarFasePlanejamento();
+        IniciarFaseDeComandos();
     }
 
-    private void Update()
-    {
-        if (!emTurnoAtivo || emPausaHabilidade) return;
-
-        tempoTurnoRestante -= Time.deltaTime;
-
-        if (textoTurno != null)
-        {
-            textoTurno.text = $"TURNO ATIVO: {Mathf.Ceil(tempoTurnoRestante)}s";
-        }
-
-        ProcessarAtaquesTime(cartasP1, cartasP2, cdAtaqueP1);
-        ProcessarAtaquesTime(cartasP2, cartasP1, cdAtaqueP2);
-
-        if (tempoTurnoRestante <= 0f)
-        {
-            EncerrarTurnoAtivo();
-        }
-    }
-
-    // ==========================================
-    // 1. CARREGAMENTO E SCRIPT DE TESTES (FALLBACK)
-    // ==========================================
     private void CarregarEInicializarCartas()
     {
         List<CartaData> listaP1 = DadosPartida.cartasJogador1;
@@ -157,187 +121,219 @@ public class GerenciadorBatalha : MonoBehaviour
     }
 
     // ==========================================
-    // 2. CICLO DE RODADAS E POSTURA DEFENSIVA
+    // FASE DE COMANDOS ALTERNADOS
     // ==========================================
-    public void IniciarFasePlanejamento()
+    public void IniciarFaseDeComandos()
     {
-        emTurnoAtivo = false;
-        p1Pronto = false;
-        p2Pronto = false;
-        p1EmDefesaGlobal = false;
-        p2EmDefesaGlobal = false;
+        emResolucaoDeTurno = false;
+        jogadorDecidindoAtual = 1;
+
+        // Limpa escudos temporários (10 DEF) da rodada anterior
+        ResetarEscudosTemporarios(cartasP1);
+        ResetarEscudosTemporarios(cartasP2);
 
         for (int i = 0; i < 2; i++)
         {
-            emPosturaDefensivaP1[i] = false;
-            emPosturaDefensivaP2[i] = false;
+            acoesP1[i] = AcaoCartaBatalha.Nenhuma;
+            acoesP2[i] = AcaoCartaBatalha.Nenhuma;
         }
+
+        AtualizarVisibilidadePaineis();
+    }
+
+    private void ResetarEscudosTemporarios(CartaBatalhaUI[] time)
+    {
+        foreach (var carta in time)
+        {
+            if (carta != null && carta.VidaAtual > 0)
+            {
+                if (carta.CartaDados == null || carta.CartaDados.nomePersonagem.Trim() != "Caesar King")
+                {
+                    carta.SetarEscudoInicial(0);
+                }
+            }
+        }
+    }
+
+    private void AtualizarVisibilidadePaineis()
+    {
+        if (emResolucaoDeTurno)
+        {
+            if (painelControleP1 != null) painelControleP1.SetActive(false);
+            if (painelControleP2 != null) painelControleP2.SetActive(false);
+            if (textoTurno != null) textoTurno.text = "RESOLVENDO TURNO...";
+            return;
+        }
+
+        bool turnoP1 = (jogadorDecidindoAtual == 1);
+
+        if (painelControleP1 != null) painelControleP1.SetActive(turnoP1);
+        if (painelControleP2 != null) painelControleP2.SetActive(!turnoP1);
 
         if (textoTurno != null)
         {
-            textoTurno.text = $"{numeroRodada}ª RODADA: PLANEJAMENTO";
-        }
-
-        AtualizarBotoesPlanejamentoUI(true);
-    }
-
-    public void BotaoAlternarDefesaP1()
-    {
-        if (emTurnoAtivo || p1Pronto) return;
-
-        p1EmDefesaGlobal = !p1EmDefesaGlobal;
-        emPosturaDefensivaP1[0] = p1EmDefesaGlobal;
-        emPosturaDefensivaP1[1] = p1EmDefesaGlobal;
-
-        if (p1EmDefesaGlobal)
-        {
-            if (cartasP1[0] != null) cartasP1[0].AdicionarEscudo(20);
-            if (cartasP1[1] != null) cartasP1[1].AdicionarEscudo(20);
-        }
-
-        if (textoBotaoDefenderP1 != null)
-        {
-            textoBotaoDefenderP1.text = p1EmDefesaGlobal ? "DEFESA: ATIVA" : "DEFENDER";
+            textoTurno.text = turnoP1 ? "Jogador 1: Escolha sua Ação" : "Jogador 2: Escolha sua Ação";
         }
     }
 
-    public void BotaoAlternarDefesaP2()
+    // --- MÉTODOS PARA O JOGADOR 1 (CARTA 0) ---
+    public void P1_Carta0_Atacar() { if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno) { acoesP1[0] = AcaoCartaBatalha.Atacar; VerificarConclusaoEscolhaP1(); } }
+    public void P1_Carta0_Defender() { if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno) { acoesP1[0] = AcaoCartaBatalha.Defender; VerificarConclusaoEscolhaP1(); } }
+
+    // --- MÉTODOS PARA O JOGADOR 1 (CARTA 1) ---
+    public void P1_Carta1_Atacar() { if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno) { acoesP1[1] = AcaoCartaBatalha.Atacar; VerificarConclusaoEscolhaP1(); } }
+    public void P1_Carta1_Defender() { if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno) { acoesP1[1] = AcaoCartaBatalha.Defender; VerificarConclusaoEscolhaP1(); } }
+
+    // --- MÉTODOS PARA O JOGADOR 2 (CARTA 0) ---
+    public void P2_Carta0_Atacar() { if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno) { acoesP2[0] = AcaoCartaBatalha.Atacar; VerificarConclusaoEscolhaP2(); } }
+    public void P2_Carta0_Defender() { if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno) { acoesP2[0] = AcaoCartaBatalha.Defender; VerificarConclusaoEscolhaP2(); } }
+
+    // --- MÉTODOS PARA O JOGADOR 2 (CARTA 1) ---
+    public void P2_Carta1_Atacar() { if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno) { acoesP2[1] = AcaoCartaBatalha.Atacar; VerificarConclusaoEscolhaP2(); } }
+    public void P2_Carta1_Defender() { if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno) { acoesP2[1] = AcaoCartaBatalha.Defender; VerificarConclusaoEscolhaP2(); } }
+
+    private void VerificarConclusaoEscolhaP1()
     {
-        if (emTurnoAtivo || p2Pronto) return;
+        bool c0Pronta = (cartasP1[0] == null || cartasP1[0].VidaAtual <= 0 || acoesP1[0] != AcaoCartaBatalha.Nenhuma);
+        bool c1Pronta = (cartasP1[1] == null || cartasP1[1].VidaAtual <= 0 || acoesP1[1] != AcaoCartaBatalha.Nenhuma);
 
-        p2EmDefesaGlobal = !p2EmDefesaGlobal;
-        emPosturaDefensivaP2[0] = p2EmDefesaGlobal;
-        emPosturaDefensivaP2[1] = p2EmDefesaGlobal;
-
-        if (p2EmDefesaGlobal)
+        if (c0Pronta && c1Pronta)
         {
-            if (cartasP2[0] != null) cartasP2[0].AdicionarEscudo(20);
-            if (cartasP2[1] != null) cartasP2[1].AdicionarEscudo(20);
+            jogadorDecidindoAtual = 2;
+            AtualizarVisibilidadePaineis();
         }
+    }
 
-        if (textoBotaoDefenderP2 != null)
+    private void VerificarConclusaoEscolhaP2()
+    {
+        bool c0Pronta = (cartasP2[0] == null || cartasP2[0].VidaAtual <= 0 || acoesP2[0] != AcaoCartaBatalha.Nenhuma);
+        bool c1Pronta = (cartasP2[1] == null || cartasP2[1].VidaAtual <= 0 || acoesP2[1] != AcaoCartaBatalha.Nenhuma);
+
+        if (c0Pronta && c1Pronta)
         {
-            textoBotaoDefenderP2.text = p2EmDefesaGlobal ? "DEFESA: ATIVA" : "DEFENDER";
+            emResolucaoDeTurno = true;
+            AtualizarVisibilidadePaineis();
+            StartCoroutine(ExecutarResolucaoTurnoRoutine());
         }
     }
 
-    public void BotaoFinalizarJogadaP1()
+    // ==========================================
+    // RESOLUÇÃO SEQUENCIAL DO TURNO
+    // ==========================================
+    private IEnumerator ExecutarResolucaoTurnoRoutine()
     {
-        p1Pronto = true;
-        if (botaoFinalizarP1 != null) botaoFinalizarP1.interactable = false;
-        if (botaoDefenderP1 != null) botaoDefenderP1.interactable = false;
+        // 1. Aplica o escudo temporário de 10 DEF
+        AplicarDefesasSeNecessario(cartasP1, acoesP1);
+        AplicarDefesasSeNecessario(cartasP2, acoesP2);
 
-        VerificarInicioDoTurno();
-    }
+        yield return new WaitForSeconds(0.6f);
 
-    public void BotaoFinalizarJogadaP2()
-    {
-        p2Pronto = true;
-        if (botaoFinalizarP2 != null) botaoFinalizarP2.interactable = false;
-        if (botaoDefenderP2 != null) botaoDefenderP2.interactable = false;
+        // 2. Ordena por Velocidade
+        List<ParticipanteTurno> filaAcoes = CriarFilaOrdenadaPorVelocidade();
 
-        VerificarInicioDoTurno();
-    }
-
-    private void VerificarInicioDoTurno()
-    {
-        if (p1Pronto && p2Pronto)
+        foreach (var participante in filaAcoes)
         {
-            AtualizarBotoesPlanejamentoUI(false);
+            if (participante.carta == null || participante.carta.VidaAtual <= 0) continue;
+            if (participante.acao != AcaoCartaBatalha.Atacar) continue;
 
-            for (int i = 0; i < 2; i++)
+            if (participante.carta.Status != null && (participante.carta.Status.estaCongelado || participante.carta.Status.estaAtordoado))
             {
-                cdAtaqueP1[i] = ObterIntervaloAtaque(cartasP1[i], emPosturaDefensivaP1[i]);
-                cdAtaqueP2[i] = ObterIntervaloAtaque(cartasP2[i], emPosturaDefensivaP2[i]);
+                yield return new WaitForSeconds(0.4f);
+                continue;
             }
 
-            tempoTurnoRestante = duracaoTurno;
-            emTurnoAtivo = true;
-        }
-    }
+            CartaBatalhaUI alvo = ObterAlvoPorSlot(participante);
 
-    private void EncerrarTurnoAtivo()
-    {
-        emTurnoAtivo = false;
+            if (alvo != null)
+            {
+                bool acaoConcluida = false;
+                ExecutarAtaqueBasico(participante.carta, alvo, () => {
+                    acaoConcluida = true;
+                });
+
+                yield return new WaitUntil(() => acaoConcluida);
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
+
+        yield return new WaitForSeconds(0.8f);
+
         numeroRodada++;
-        IniciarFasePlanejamento();
+        IniciarFaseDeComandos();
     }
 
-    private void AtualizarBotoesPlanejamentoUI(bool ativo)
-    {
-        if (botaoFinalizarP1 != null) { botaoFinalizarP1.gameObject.SetActive(ativo); botaoFinalizarP1.interactable = ativo; }
-        if (botaoDefenderP1 != null) { botaoDefenderP1.gameObject.SetActive(ativo); botaoDefenderP1.interactable = ativo; }
-        if (botaoFinalizarP2 != null) { botaoFinalizarP2.gameObject.SetActive(ativo); botaoFinalizarP2.interactable = ativo; }
-        if (botaoDefenderP2 != null) { botaoDefenderP2.gameObject.SetActive(ativo); botaoDefenderP2.interactable = ativo; }
-
-        if (ativo)
-        {
-            if (textoBotaoDefenderP1 != null) textoBotaoDefenderP1.text = "DEFENDER";
-            if (textoBotaoDefenderP2 != null) textoBotaoDefenderP2.text = "DEFENDER";
-        }
-    }
-
-    // ==========================================
-    // 3. PROCESSAMENTO DE ATAQUES E STATUS
-    // ==========================================
-    private float ObterIntervaloAtaque(CartaBatalhaUI carta, bool emDefesa)
-    {
-        if (carta == null || carta.VidaAtual <= 0) return 999f;
-
-        float vel = carta.Atributos.velocidade;
-        float penalidadeDefesa = emDefesa ? 0.8f : 0f;
-        return Mathf.Max(1.5f, 3.5f - ((vel - penalidadeDefesa) * 0.17f));
-    }
-
-    private void ProcessarAtaquesTime(CartaBatalhaUI[] atacantes, CartaBatalhaUI[] defensores, float[] cooldowns)
+    private void AplicarDefesasSeNecessario(CartaBatalhaUI[] time, AcaoCartaBatalha[] acoes)
     {
         for (int i = 0; i < 2; i++)
         {
-            CartaBatalhaUI atacante = atacantes[i];
-            if (atacante == null || atacante.VidaAtual <= 0) continue;
-
-            cooldowns[i] -= Time.deltaTime;
-
-            if (cooldowns[i] <= 0f)
+            if (time[i] != null && time[i].VidaAtual > 0 && acoes[i] == AcaoCartaBatalha.Defender)
             {
-                CartaBatalhaUI alvo = ObterAlvoValido(defensores);
-                if (alvo != null)
-                {
-                    ExecutarAtaqueBasico(atacante, alvo);
-                }
-
-                cooldowns[i] = ObterIntervaloAtaque(atacante, false);
+                time[i].AdicionarEscudo(10);
+                time[i].MostrarTextoPopUp("DEFESA!", new Color(0f, 0.85f, 1f));
             }
         }
     }
 
-    private CartaBatalhaUI ObterAlvoValido(CartaBatalhaUI[] defensores)
+    private CartaBatalhaUI ObterAlvoPorSlot(ParticipanteTurno participante)
     {
-        List<CartaBatalhaUI> vivos = new List<CartaBatalhaUI>();
-        foreach (var c in defensores)
+        CartaBatalhaUI[] timeInimigo = participante.eDoP1 ? cartasP2 : cartasP1;
+        int slotOrigem = participante.indiceSlot;
+
+        if (timeInimigo[slotOrigem] != null && timeInimigo[slotOrigem].VidaAtual > 0)
         {
-            if (c != null && c.VidaAtual > 0) vivos.Add(c);
+            return timeInimigo[slotOrigem];
         }
 
-        if (vivos.Count == 0) return null;
-        return vivos[Random.Range(0, vivos.Count)];
+        int outroSlot = (slotOrigem == 0) ? 1 : 0;
+        if (timeInimigo[outroSlot] != null && timeInimigo[outroSlot].VidaAtual > 0)
+        {
+            return timeInimigo[outroSlot];
+        }
+
+        return null;
     }
 
-    private void ExecutarAtaqueBasico(CartaBatalhaUI atacante, CartaBatalhaUI alvo)
+    private List<ParticipanteTurno> CriarFilaOrdenadaPorVelocidade()
     {
-        if (atacante == null || alvo == null) return;
+        List<ParticipanteTurno> lista = new List<ParticipanteTurno>();
 
-        // Astra Yao não ataca
-        if (atacante.CartaDados != null && atacante.CartaDados.nomePersonagem.Trim() == "Astra Yao") return;
+        for (int i = 0; i < 2; i++)
+        {
+            if (cartasP1[i] != null && cartasP1[i].VidaAtual > 0)
+            {
+                int vel = cartasP1[i].Atributos != null ? cartasP1[i].Atributos.velocidade : 0;
+                lista.Add(new ParticipanteTurno(cartasP1[i], acoesP1[i], vel, true, i));
+            }
+            if (cartasP2[i] != null && cartasP2[i].VidaAtual > 0)
+            {
+                int vel = cartasP2[i].Atributos != null ? cartasP2[i].Atributos.velocidade : 0;
+                lista.Add(new ParticipanteTurno(cartasP2[i], acoesP2[i], vel, false, i));
+            }
+        }
 
-        // Se estiver incapacitado por status
-        if (atacante.Status != null && (atacante.Status.estaCongelado || atacante.Status.estaAtordoado)) return;
+        lista.Sort((a, b) => b.velocidade.CompareTo(a.velocidade));
+        return lista;
+    }
 
-        string nomeAtacante = (atacante.CartaDados != null) ? atacante.CartaDados.nomePersonagem.Trim() : "";
-        string nomeAlvo = (alvo.CartaDados != null) ? alvo.CartaDados.nomePersonagem.Trim() : "";
+    private void ExecutarAtaqueBasico(CartaBatalhaUI atacante, CartaBatalhaUI alvo, System.Action aoTerminarAtaque)
+    {
+        if (atacante == null || alvo == null)
+        {
+            aoTerminarAtaque?.Invoke();
+            return;
+        }
 
-        // Ponto de destino
+        if (atacante.CartaDados != null && atacante.CartaDados.nomePersonagem.Trim() == "Astra Yao")
+        {
+            aoTerminarAtaque?.Invoke();
+            return;
+        }
+
+        string nomeAtacante = atacante.CartaDados != null ? atacante.CartaDados.nomePersonagem.Trim() : "";
+        string nomeAlvo = alvo.CartaDados != null ? alvo.CartaDados.nomePersonagem.Trim() : "";
+
         Vector3 posicaoDestinoAtaque = alvo.transform.position;
+
         if (nomeAtacante == "Billy Kid" || (atacante.CartaDados != null && atacante.CartaDados.alcanceSkill == TipoAlcanceAtaque.AmbasAsCartas))
         {
             CartaBatalhaUI[] timeInimigo = (atacante == cartasP1[0] || atacante == cartasP1[1]) ? cartasP2 : cartasP1;
@@ -347,42 +343,37 @@ public class GerenciadorBatalha : MonoBehaviour
             }
         }
 
-        // Investida
         atacante.AnimarInvestidaEVoltar(posicaoDestinoAtaque, () =>
         {
-            // --- PROTEÇÃO CONTRA NULL REFERENCE NO IMPACTO ---
-            if (alvo == null || atacante == null) return;
+            if (alvo == null || atacante == null)
+            {
+                aoTerminarAtaque?.Invoke();
+                return;
+            }
 
-            // 1. Esquiva
-            int intAlvo = (alvo.Atributos != null) ? alvo.Atributos.intelecto : 0;
-            int bonusEllen = (alvo.Status != null) ? alvo.Status.bonusIntelectoEllen : 0;
+            int intAlvo = alvo.Atributos != null ? alvo.Atributos.intelecto : 0;
+            int bonusEllen = alvo.Status != null ? alvo.Status.bonusIntelectoEllen : 0;
             float chanceEsquiva = (intAlvo + bonusEllen) * 0.03f;
 
             if (atacante.Status != null && atacante.Status.estaConfuso) chanceEsquiva += 0.20f;
 
             bool esquivou = Random.value < chanceEsquiva;
 
-            if (esquivou && nomeAtacante == "Nicole Demara" && atacante.Status != null && atacante.Status.tempoRouboNicoleRestante <= 0f)
-            {
-                esquivou = false;
-                atacante.Status.tempoRouboNicoleRestante = 15f;
-            }
-
             if (esquivou)
             {
                 alvo.AnimarEsquiva(atacante.transform.position - alvo.transform.position);
                 if (nomeAlvo == "Ellen Joe" && alvo.Status != null) alvo.Status.bonusIntelectoEllen += 2;
+                aoTerminarAtaque?.Invoke();
                 return;
             }
 
             if (nomeAlvo == "Ellen Joe" && alvo.Status != null) alvo.Status.bonusIntelectoEllen = 0;
 
-            // 2. Cálculo de Dano e Crítico
-            int forcaAtacante = (atacante.Atributos != null) ? atacante.Atributos.forca : 0;
-            int destrezaAtacante = (atacante.Atributos != null) ? atacante.Atributos.destreza : 0;
-            int raivaAtacante = (atacante.Atributos != null) ? atacante.Atributos.raiva : 0;
+            int forcaAtacante = atacante.Atributos != null ? atacante.Atributos.forca : 0;
+            int destrezaAtacante = atacante.Atributos != null ? atacante.Atributos.destreza : 0;
+            int raivaAtacante = atacante.Atributos != null ? atacante.Atributos.raiva : 0;
 
-            int danoBase = Random.Range(10 + (forcaAtacante * 2), 21 + (forcaAtacante * 2));
+            int danoBase = Random.Range(5 + forcaAtacante, 11 + forcaAtacante);
             if (nomeAtacante == "Billy Kid") danoBase = Mathf.Max(1, danoBase / 2);
 
             float chanceCritico = destrezaAtacante * 0.07f;
@@ -396,12 +387,10 @@ public class GerenciadorBatalha : MonoBehaviour
                 danoBase = Mathf.RoundToInt(danoBase * bonusRaiva);
             }
 
-            // 3. Efeitos Visuais e Shake Seguro (Sem quebrar se Camera.main for null)
             if (foiCritico)
             {
                 alvo.PiscarCarta(Color.red);
                 alvo.MostrarTextoPopUp("CRÍTICO!", Color.red);
-
                 StartCoroutine(RotinaCameraLentaCritico(0.15f));
 
                 if (Camera.main != null)
@@ -419,87 +408,41 @@ public class GerenciadorBatalha : MonoBehaviour
                 }
             }
 
-            // 4. APLICAÇÃO EFETIVA DO DANO E CARGAS
             alvo.ReceberDano(danoBase);
 
             atacante.AdicionarCargaSkill(1);
             atacante.AdicionarCargaUlt(1);
 
-            // 5. Passivas após acerto
-            if (atacante.Status != null)
-            {
-                atacante.Status.contagemGolpesAcertados++;
-
-                if (nomeAtacante == "Hoshimi Miyabi" && atacante.Status.contagemGolpesAcertados >= 5)
-                {
-                    if (alvo.Status != null)
-                    {
-                        alvo.Status.AplicarCongelamento();
-                        alvo.DefinirVisualEstado();
-                        alvo.MostrarTextoPopUp("CONGELADO!", new Color(0f, 0.95f, 1f));
-                    }
-                    atacante.Status.contagemGolpesAcertados = 0;
-                }
-
-                if (nomeAtacante == "Anby" && atacante.Status.contagemGolpesAcertados >= 4)
-                {
-                    if (alvo.Atributos != null) alvo.Atributos.velocidade = Mathf.Max(0, alvo.Atributos.velocidade - 1);
-                    alvo.MostrarTextoPopUp("CHOQUE!", new Color(1f, 0.85f, 0f));
-                    atacante.Status.contagemGolpesAcertados = 0;
-                }
-            }
-
-            if (nomeAtacante == "N.º 11" && alvo.Status != null)
-            {
-                alvo.Status.AplicarQueimacao(2);
-                alvo.MostrarTextoPopUp("QUEIMANDO!", new Color(1f, 0.4f, 0f));
-            }
-
-            if (alvo.Status != null)
-            {
-                if (nomeAlvo == "Phaethon" && Random.value < 0.15f)
-                {
-                    atacante.Status.AplicarConfusao(4f);
-                    atacante.MostrarTextoPopUp("CONFUSO!", new Color(0.8f, 0.3f, 1f));
-                }
-                else if (nomeAlvo == "Jane Doe" && Random.value < 0.30f)
-                {
-                    atacante.Status.AplicarConfusao(4f);
-                    atacante.MostrarTextoPopUp("CONFUSO!", new Color(0.8f, 0.3f, 1f));
-                }
-            }
+            aoTerminarAtaque?.Invoke();
         });
     }
 
-    // Corrotina para gerar a câmera lenta instantânea no acerto crítico
+    // --- CORROTINA DA CÂMERA LENTA NO CRÍTICO ---
     private IEnumerator RotinaCameraLentaCritico(float duracaoReal)
     {
-        Time.timeScale = 0.2f; // Reduz a velocidade drasticamente
+        Time.timeScale = 0.2f;
         yield return new WaitForSecondsRealtime(duracaoReal);
-        Time.timeScale = 1.0f; // Restaura a velocidade normal
+        Time.timeScale = 1.0f;
     }
+}
 
-    // ==========================================
-    // 4. ÁREA RESERVADA PARA HABILIDADES / ULTS / PASSIVAS
-    // ==========================================
-    /*
-    public void ExecutarHabilidadeCarta(CartaBatalhaUI atacante, int tipoHabilidade)
+// ==========================================
+// CLASSE AUXILIAR DE SUPORTE AO TURNO
+// ==========================================
+public class ParticipanteTurno
+{
+    public CartaBatalhaUI carta;
+    public AcaoCartaBatalha acao;
+    public int velocidade;
+    public bool eDoP1;
+    public int indiceSlot;
+
+    public ParticipanteTurno(CartaBatalhaUI c, AcaoCartaBatalha a, int v, bool p1, int slot)
     {
-        StartCoroutine(RoutineExecutarHabilidade(atacante, tipoHabilidade));
+        carta = c;
+        acao = a;
+        velocidade = v;
+        eDoP1 = p1;
+        indiceSlot = slot;
     }
-
-    private IEnumerator RoutineExecutarHabilidade(CartaBatalhaUI atacante, int tipoHabilidade)
-    {
-        // Pausa imediatamente o tempo do turno e o fluxo de ataques
-        emPausaHabilidade = true;
-
-        // --- FUTURA INTEGRAÇÃO COM ANIMAÇÃO TIPO POKÉMON POCKET ---
-        // Ex: Usar atacante.CartaDados.descricaoResumidaSkill / valorEfeitoSkill
-
-        yield return new WaitForSeconds(1.5f); // Tempo de execução da habilidade ativa
-
-        // Retoma o turno normalmente
-        emPausaHabilidade = false;
-    }
-    */
 }

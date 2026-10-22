@@ -246,8 +246,10 @@ public class GerenciadorDistribuicao : MonoBehaviour
         if (textoDestrezaValor != null) textoDestrezaValor.text = atributosAtuais.destreza + " DT";
         if (textoRaivaValor != null) textoRaivaValor.text = atributosAtuais.raiva + " RV";
 
-        int danoMin = 10 + (atributosAtuais.forca * 2);
-        int danoMax = 20 + (atributosAtuais.forca * 2);
+        // Novo cálculo de dano base (5 a 10 + 1 por ponto de Força)
+        int danoMin = 5 + atributosAtuais.forca;
+        int danoMax = 10 + atributosAtuais.forca;
+
         int esquiva = atributosAtuais.intelecto * 3;
         int critico = atributosAtuais.destreza * 7;
         int bonusRaiva = atributosAtuais.raiva * 6;
