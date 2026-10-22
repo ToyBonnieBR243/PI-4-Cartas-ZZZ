@@ -246,7 +246,7 @@ public class GerenciadorDistribuicao : MonoBehaviour
         if (textoDestrezaValor != null) textoDestrezaValor.text = atributosAtuais.destreza + " DT";
         if (textoRaivaValor != null) textoRaivaValor.text = atributosAtuais.raiva + " RV";
 
-        // Novo cálculo de dano base (5 a 10 + 1 por ponto de Força)
+        // Cálculos de atributos
         int danoMin = 5 + atributosAtuais.forca;
         int danoMax = 10 + atributosAtuais.forca;
 
@@ -254,10 +254,21 @@ public class GerenciadorDistribuicao : MonoBehaviour
         int critico = atributosAtuais.destreza * 7;
         int bonusRaiva = atributosAtuais.raiva * 6;
 
+        // Descrição dinâmica do efeito de Velocidade
+        string efeitoVelocidade = "Ataque Único (Ordem de Turno)";
+        if (atributosAtuais.velocidade >= 10)
+        {
+            efeitoVelocidade = "Ataque Duplo (100% + 100% Dano)";
+        }
+        else if (atributosAtuais.velocidade >= 5)
+        {
+            efeitoVelocidade = "Ataque Duplo (100% + 50% Dano)";
+        }
+
         if (textoPreviaGeral != null)
         {
             textoPreviaGeral.text = $"Dano: {danoMin} a {danoMax}\n" +
-                                    $"Velocidade: {atributosAtuais.velocidade}\n" +
+                                    $"Velocidade ({atributosAtuais.velocidade}): {efeitoVelocidade}\n" +
                                     $"Esquiva: {esquiva}%\n" +
                                     $"Crítico: {critico}%\n" +
                                     $"Fúria (<30% Vida): +{bonusRaiva}%";

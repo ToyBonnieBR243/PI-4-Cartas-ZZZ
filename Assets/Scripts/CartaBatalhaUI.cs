@@ -196,6 +196,12 @@ public class CartaBatalhaUI : MonoBehaviour
     {
         if (groupEscudo == null) return;
 
+        // Controla se o texto de HP deve sumir quando o escudo estiver ativo
+        if (textoHP != null)
+        {
+            textoHP.gameObject.SetActive(EscudoAtual <= 0);
+        }
+
         if (EscudoAtual > 0)
         {
             groupEscudo.gameObject.SetActive(true);
