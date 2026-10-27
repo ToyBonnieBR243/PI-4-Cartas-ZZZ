@@ -149,6 +149,20 @@ public class CartaBatalhaUI : MonoBehaviour
         EscudoAtual = valorEscudo;
         EscudoMaximo = valorEscudo;
         AtualizarInterfaceEscudo(false);
+
+        // Garante que o escudo apareça imediatamente e o texto de HP suma desde o início
+        if (valorEscudo > 0)
+        {
+            if (groupEscudo != null)
+            {
+                groupEscudo.gameObject.SetActive(true);
+                groupEscudo.alpha = 1f;
+            }
+            if (textoHP != null)
+            {
+                textoHP.gameObject.SetActive(false);
+            }
+        }
     }
 
     public void AdicionarEscudo(int quantidadeEscudo)

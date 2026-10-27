@@ -420,7 +420,8 @@ public class GerenciadorBatalha : MonoBehaviour
             {
                 // 1º ATAQUE NORMAL
                 bool acaoConcluida = false;
-                ExecutarAtaqueBasico(participante.carta, alvo, 1.0f, () => {
+                ExecutarAtaqueBasico(participante.carta, alvo, 1.0f, () =>
+                {
                     acaoConcluida = true;
                 });
                 yield return new WaitUntil(() => acaoConcluida);
@@ -434,21 +435,29 @@ public class GerenciadorBatalha : MonoBehaviour
 
                 if (vel >= 5 && alvo.VidaAtual > 0)
                 {
-                    float multiplicadorDanoExtra = (vel >= 10) ? 1.0f : 0.5f;
-                    string textoMsgExtra = (vel >= 10) ? "ATAQUE DUPLO!" : "VELOCIDADE!";
+                    // 5 pontos = 25% de chance | 10 pontos = 50% de chance
+                    float chanceDuplo = (vel >= 10) ? 0.50f : 0.25f;
 
-                    participante.carta.MostrarTextoPopUp(textoMsgExtra, new Color(1f, 0.8f, 0f));
-                    yield return new WaitForSeconds(0.2f);
+                    if (Random.value < chanceDuplo)
+                    {
+                        // 10 pontos = 100% de dano (1.0f) | 5 a 9 pontos = 50% de dano (0.5f)
+                        float multiplicadorDanoExtra = (vel >= 10) ? 1.0f : 0.5f;
+                        string textoMsgExtra = (vel >= 10) ? "ATAQUE DUPLO!" : "VELOCIDADE!";
 
-                    bool ataqueExtraConcluido = false;
-                    ExecutarAtaqueBasico(participante.carta, alvo, multiplicadorDanoExtra, () => {
-                        ataqueExtraConcluido = true;
-                    });
-                    yield return new WaitUntil(() => ataqueExtraConcluido);
+                        participante.carta.MostrarTextoPopUp(textoMsgExtra, new Color(1f, 0.8f, 0f));
+                        yield return new WaitForSeconds(0.2f);
 
-                    if (VerificarFimDeJogo()) yield break;
+                        bool ataqueExtraConcluido = false;
+                        ExecutarAtaqueBasico(participante.carta, alvo, multiplicadorDanoExtra, () =>
+                        {
+                            ataqueExtraConcluido = true;
+                        });
+                        yield return new WaitUntil(() => ataqueExtraConcluido);
 
-                    yield return new WaitForSeconds(0.3f);
+                        if (VerificarFimDeJogo()) yield break;
+
+                        yield return new WaitForSeconds(0.3f);
+                    }
                 }
             }
         }

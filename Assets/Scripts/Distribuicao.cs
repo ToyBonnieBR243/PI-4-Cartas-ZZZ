@@ -258,11 +258,11 @@ public class GerenciadorDistribuicao : MonoBehaviour
         string efeitoVelocidade = "Ataque Único (Ordem de Turno)";
         if (atributosAtuais.velocidade >= 10)
         {
-            efeitoVelocidade = "Ataque Duplo (100% + 100% Dano)";
+            efeitoVelocidade = "50% de chance de Ataque Duplo (100% Dano)";
         }
         else if (atributosAtuais.velocidade >= 5)
         {
-            efeitoVelocidade = "Ataque Duplo (100% + 50% Dano)";
+            efeitoVelocidade = "25% de chance de Ataque Duplo (50% Dano)";
         }
 
         if (textoPreviaGeral != null)
