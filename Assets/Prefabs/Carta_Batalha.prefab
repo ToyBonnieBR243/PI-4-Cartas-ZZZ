@@ -347,7 +347,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 222750154429937073}
         m_TargetAssemblyTypeName: CartaBatalhaUI, Assembly-CSharp
-        m_MethodName: BotaoClicadoUlt
+        m_MethodName: BotaoUltClicado
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -479,7 +479,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 222750154429937073}
         m_TargetAssemblyTypeName: CartaBatalhaUI, Assembly-CSharp
-        m_MethodName: BotaoClicadoSkill
+        m_MethodName: BotaoSkillClicado
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -5,16 +5,17 @@ public class SafeAreaAdapter : MonoBehaviour
 {
     private RectTransform rectTransform;
     private Rect ultimaSafeArea = new Rect(0, 0, 0, 0);
+    private Canvas canvasPai;
 
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+        canvasPai = GetComponentInParent<Canvas>();
         AplicarSafeArea();
     }
 
     private void Update()
     {
-        // Garante a atualização caso a tela rotacione ou o simulador mude
         if (ultimaSafeArea != Screen.safeArea)
         {
             AplicarSafeArea();
@@ -26,17 +27,37 @@ public class SafeAreaAdapter : MonoBehaviour
         Rect safeArea = Screen.safeArea;
         ultimaSafeArea = safeArea;
 
-        // Converte a área segura (em pixels) para proporções relativas (0 a 1)
+        // Se o canvas estiver em modo Overlay, usamos Screen.width e Screen.height diretamente
+        float larguraTela = Screen.width;
+        float alturaTela = Screen.height;
+
+        if (canvasPai != null && canvasPai.renderMode == RenderMode.ScreenSpaceCamera && canvasPai.worldCamera != null)
+        {
+            // Caso utilize Camera, ajusta para os limites da câmera
+            larguraTela = canvasPai.pixelRect.width;
+            alturaTela = canvasPai.pixelRect.height;
+        }
+
+        // Converte a área segura em proporções normalizadas (0 a 1)
         Vector2 anchorMin = safeArea.position;
         Vector2 anchorMax = safeArea.position + safeArea.size;
 
-        anchorMin.x /= Screen.width;
-        anchorMin.y /= Screen.height;
-        anchorMax.x /= Screen.width;
-        anchorMax.y /= Screen.height;
+        anchorMin.x /= larguraTela;
+        anchorMin.y /= alturaTela;
+        anchorMax.x /= larguraTela;
+        anchorMax.y /= alturaTela;
 
-        // Ajusta as âncoras do RectTransform para coincidir exatamente com a Safe Area
+        // Evita valores inválidos de clamping
+        anchorMin.x = Mathf.Clamp01(anchorMin.x);
+        anchorMin.y = Mathf.Clamp01(anchorMin.y);
+        anchorMax.x = Mathf.Clamp01(anchorMax.x);
+        anchorMax.y = Mathf.Clamp01(anchorMax.y);
+
         rectTransform.anchorMin = anchorMin;
         rectTransform.anchorMax = anchorMax;
+
+        // Zera as margens para encaixar perfeitamente nas âncoras calculadas
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
     }
 }

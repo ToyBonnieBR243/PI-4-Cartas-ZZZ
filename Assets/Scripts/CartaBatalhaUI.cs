@@ -66,14 +66,17 @@ public class CartaBatalhaUI : MonoBehaviour
     public int CargasSkillAtuais { get; private set; }
     public int CargasUltAtuais { get; private set; }
 
-    // Flags de seleção de ação especial para o turno atual
-    public bool querUsarSkill { get; private set; } = false;
-    public bool querUsarUlt { get; private set; } = false;
+    private bool eDoP1;
+    private int indiceSlot;
+    private GerenciadorBatalha gerenciadorBatalha;
 
-    public void InicializarCarta(CartaData cartaData, AtributosRuntime atributos)
+    public void InicializarCarta(CartaData cartaData, AtributosRuntime atributos, bool p1, int slot, GerenciadorBatalha ger)
     {
         CartaDados = cartaData;
         Atributos = atributos;
+        eDoP1 = p1;
+        indiceSlot = slot;
+        gerenciadorBatalha = ger;
 
         Status = GetComponent<EstadoStatusCarta>();
         if (Status == null) Status = gameObject.AddComponent<EstadoStatusCarta>();
@@ -100,43 +103,95 @@ public class CartaBatalhaUI : MonoBehaviour
         AtualizarInterfaceEscudo(false);
         AtualizarCargas();
 
-        Debug.Log($"[DEBUG-UI] Carta inicializada: {cartaData.nomePersonagem} | HP Inicial: {VidaAtual}");
-    }
-
-    // Atualiza a interatividade dos botões de Habilidade/Ult com base nas cargas
-    public void AtualizarEstadoBotoesAcoesEspeciais(bool interativo)
-    {
         if (btnUsarSkill != null)
         {
-            bool podeUsarSkill = (CargasSkillAtuais >= CartaDados.cargasNecessariasSkill);
-            btnUsarSkill.gameObject.SetActive(podeUsarSkill);
-            btnUsarSkill.interactable = interativo && podeUsarSkill;
+            btnUsarSkill.onClick.RemoveAllListeners();
+            btnUsarSkill.onClick.AddListener(BotaoSkillClicado);
         }
 
         if (btnUsarUlt != null)
         {
-            bool podeUsarUlt = (CargasUltAtuais >= CartaDados.cargasNecessariasUlt);
-            btnUsarUlt.gameObject.SetActive(podeUsarUlt);
-            btnUsarUlt.interactable = interativo && podeUsarUlt;
+            btnUsarUlt.onClick.RemoveAllListeners();
+            btnUsarUlt.onClick.AddListener(BotaoUltClicado);
+        }
+
+        AtualizarEstadoBotoesAcoesEspeciais(true, AcaoCartaBatalha.Nenhuma);
+    }
+
+    // Gerencia a interatividade e o estado visual (apagadinho/clicável)
+    public void AtualizarEstadoBotoesAcoesEspeciais(bool ativo, AcaoCartaBatalha acaoAtualDaCarta)
+    {
+        int reqSkill = (CartaDados != null && CartaDados.cargasNecessariasSkill > 0) ? CartaDados.cargasNecessariasSkill : 3;
+        int reqUlt = (CartaDados != null && CartaDados.cargasNecessariasUlt > 0) ? CartaDados.cargasNecessariasUlt : 5;
+
+        if (btnUsarSkill != null)
+        {
+            bool temCargaSkill = (CargasSkillAtuais >= reqSkill);
+            btnUsarSkill.gameObject.SetActive(temCargaSkill);
+
+            // Se esta skill foi a escolhida, ela fica desativada (apagadinha); senão, fica interativa se tiver carga e o turno permitir
+            if (acaoAtualDaCarta == AcaoCartaBatalha.Skill)
+            {
+                btnUsarSkill.interactable = false;
+            }
+            else
+            {
+                btnUsarSkill.interactable = ativo && temCargaSkill;
+            }
+        }
+
+        if (btnUsarUlt != null)
+        {
+            bool temCargaUlt = (CargasUltAtuais >= reqUlt);
+            btnUsarUlt.gameObject.SetActive(temCargaUlt);
+
+            // Se esta ult foi a escolhida, ela fica desativada (apagadinha); senão, fica interativa se tiver carga e o turno permitir
+            if (acaoAtualDaCarta == AcaoCartaBatalha.Ult)
+            {
+                btnUsarUlt.interactable = false;
+            }
+            else
+            {
+                btnUsarUlt.interactable = ativo && temCargaUlt;
+            }
+        }
+    }
+
+    public void BotaoSkillClicado()
+    {
+        if (gerenciadorBatalha != null)
+        {
+            gerenciadorBatalha.SelecionarAcaoEspecial(eDoP1, indiceSlot, AcaoCartaBatalha.Skill);
+        }
+    }
+
+    public void BotaoUltClicado()
+    {
+        if (gerenciadorBatalha != null)
+        {
+            gerenciadorBatalha.SelecionarAcaoEspecial(eDoP1, indiceSlot, AcaoCartaBatalha.Ult);
         }
     }
 
     private void GerarIconesCargas()
     {
+        int reqSkill = (CartaDados != null && CartaDados.cargasNecessariasSkill > 0) ? CartaDados.cargasNecessariasSkill : 3;
+        int reqUlt = (CartaDados != null && CartaDados.cargasNecessariasUlt > 0) ? CartaDados.cargasNecessariasUlt : 5;
+
         foreach (Transform child in containerHab) Destroy(child.gameObject);
         listaIconesSkill.Clear();
 
         foreach (Transform child in containerUlt) Destroy(child.gameObject);
         listaIconesUlt.Clear();
 
-        for (int i = 0; i < CartaDados.cargasNecessariasSkill; i++)
+        for (int i = 0; i < reqSkill; i++)
         {
             GameObject novoIcone = Instantiate(prefabIconoCarga, containerHab);
             Image img = novoIcone.GetComponent<Image>();
             if (img != null) listaIconesSkill.Add(img);
         }
 
-        for (int i = 0; i < CartaDados.cargasNecessariasUlt; i++)
+        for (int i = 0; i < reqUlt; i++)
         {
             GameObject novoIcone = Instantiate(prefabIconoCarga, containerUlt);
             Image img = novoIcone.GetComponent<Image>();
@@ -146,7 +201,6 @@ public class CartaBatalhaUI : MonoBehaviour
 
     public void ReceberDano(int quantidadeDano)
     {
-        Debug.Log($"[DEBUG-UI] ReceberDano chamado em {gameObject.name}. Dano recebido: {quantidadeDano}. HP antes: {VidaAtual} | Escudo antes: {EscudoAtual}");
         int danoRestante = quantidadeDano;
 
         if (EscudoAtual > 0)
@@ -168,7 +222,6 @@ public class CartaBatalhaUI : MonoBehaviour
         if (danoRestante > 0)
         {
             VidaAtual = Mathf.Max(0, VidaAtual - danoRestante);
-            Debug.Log($"[DEBUG-UI] HP após dano em {gameObject.name}: {VidaAtual}");
             AtualizarInterfaceVida(true);
         }
     }
@@ -178,7 +231,6 @@ public class CartaBatalhaUI : MonoBehaviour
         EscudoAtual = valorEscudo;
         EscudoMaximo = valorEscudo;
 
-        // Garante ativação imediata para qualquer carta com escudo inicial > 0
         if (groupEscudo != null)
         {
             groupEscudo.gameObject.SetActive(valorEscudo > 0);
@@ -204,16 +256,8 @@ public class CartaBatalhaUI : MonoBehaviour
     private void AtualizarInterfaceVida(bool animar)
     {
         float pctVida = Mathf.Clamp01((float)VidaAtual / VidaMaxima);
-        Debug.Log($"[DEBUG-UI] Atualizando UI Vida de {gameObject.name} -> Texto: {VidaAtual} HP | Pct Fill: {pctVida}");
 
-        if (textoHP != null)
-        {
-            textoHP.text = $"{VidaAtual} HP";
-        }
-        else
-        {
-            Debug.LogWarning($"[AVISO-UI] 'textoHP' está nulo no Inspector de {gameObject.name}!");
-        }
+        if (textoHP != null) textoHP.text = $"{VidaAtual} HP";
 
         if (coracaoPreenchimento != null)
         {
@@ -223,21 +267,13 @@ public class CartaBatalhaUI : MonoBehaviour
             else
                 coracaoPreenchimento.fillAmount = pctVida;
         }
-        else
-        {
-            Debug.LogWarning($"[AVISO-UI] 'coracaoPreenchimento' está nulo no Inspector de {gameObject.name}!");
-        }
     }
 
     private void AtualizarInterfaceEscudo(bool animar)
     {
         if (groupEscudo == null) return;
 
-        // O texto de HP Some se houver escudo ativo
-        if (textoHP != null)
-        {
-            textoHP.gameObject.SetActive(EscudoAtual <= 0);
-        }
+        if (textoHP != null) textoHP.gameObject.SetActive(EscudoAtual <= 0);
 
         if (EscudoAtual > 0)
         {
@@ -275,7 +311,6 @@ public class CartaBatalhaUI : MonoBehaviour
         }
     }
 
-    // Método para atualizar o texto temporizador dos estados na UI da carta
     public void AtualizarTextoTemporizador(string textoTempo)
     {
         if (textoTemporizadorStatus != null)
@@ -301,10 +336,7 @@ public class CartaBatalhaUI : MonoBehaviour
         seqInvestida.SetUpdate(true);
 
         seqInvestida.Append(rectTransform.DOLocalMove(pontoImpactoBorda, 0.10f).SetEase(Ease.InQuad));
-        seqInvestida.AppendCallback(() => {
-            aoAtingirImpacto?.Invoke();
-        });
-
+        seqInvestida.AppendCallback(() => { aoAtingirImpacto?.Invoke(); });
         seqInvestida.Append(rectTransform.DOLocalMove(posLocalOriginal, 0.14f).SetEase(Ease.OutQuad));
     }
 
@@ -343,10 +375,7 @@ public class CartaBatalhaUI : MonoBehaviour
     public void PiscarCarta(Color corPisca)
     {
         if (imagemArteCompleta == null) return;
-
-        imagemArteCompleta.DOColor(corPisca, 0.08f).SetUpdate(true).OnComplete(() => {
-            DefinirVisualEstado();
-        });
+        imagemArteCompleta.DOColor(corPisca, 0.08f).SetUpdate(true).OnComplete(() => { DefinirVisualEstado(); });
     }
 
     public void MostrarTextoPopUp(string texto, Color cor)
@@ -363,40 +392,22 @@ public class CartaBatalhaUI : MonoBehaviour
 
     public void AdicionarCargaSkill(int quantidade = 1)
     {
-        CargasSkillAtuais = Mathf.Min(CartaDados.cargasNecessariasSkill, CargasSkillAtuais + quantidade);
-        Debug.Log($"[DEBUG-Cargas] {CartaDados.nomePersonagem} ganhou carga de Skill. Total: {CargasSkillAtuais}");
+        int reqSkill = (CartaDados != null && CartaDados.cargasNecessariasSkill > 0) ? CartaDados.cargasNecessariasSkill : 3;
+        CargasSkillAtuais = Mathf.Min(reqSkill, CargasSkillAtuais + quantidade);
         AtualizarCargas();
+        AtualizarEstadoBotoesAcoesEspeciais(true, AcaoCartaBatalha.Nenhuma);
     }
 
     public void AdicionarCargaUlt(int quantidade = 1)
     {
-        CargasUltAtuais = Mathf.Min(CartaDados.cargasNecessariasUlt, CargasUltAtuais + quantidade);
-        Debug.Log($"[DEBUG-Cargas] {CartaDados.nomePersonagem} ganhou carga de Ult. Total: {CargasUltAtuais}");
+        int reqUlt = (CartaDados != null && CartaDados.cargasNecessariasUlt > 0) ? CartaDados.cargasNecessariasUlt : 5;
+        CargasUltAtuais = Mathf.Min(reqUlt, CargasUltAtuais + quantidade);
         AtualizarCargas();
+        AtualizarEstadoBotoesAcoesEspeciais(true, AcaoCartaBatalha.Nenhuma);
     }
 
-    public void BotaoClicadoSkill()
-    {
-        querUsarSkill = true;
-        querUsarUlt = false;
-        Debug.Log($"{CartaDados.nomePersonagem} selecionou Habilidade!");
-    }
-
-    public void BotaoClicadoUlt()
-    {
-        querUsarUlt = true;
-        querUsarSkill = false;
-        Debug.Log($"{CartaDados.nomePersonagem} selecionou Ultimate!");
-    }
-
-    public void LimparAcoesEspeciais()
-    {
-        querUsarSkill = false;
-        querUsarUlt = false;
-    }
-
-    public void ResetarCargasSkill() { CargasSkillAtuais = 0; AtualizarCargas(); }
-    public void ResetarCargasUlt() { CargasUltAtuais = 0; AtualizarCargas(); }
+    public void ResetarCargasSkill() { CargasSkillAtuais = 0; AtualizarCargas(); AtualizarEstadoBotoesAcoesEspeciais(true, AcaoCartaBatalha.Nenhuma); }
+    public void ResetarCargasUlt() { CargasUltAtuais = 0; AtualizarCargas(); AtualizarEstadoBotoesAcoesEspeciais(true, AcaoCartaBatalha.Nenhuma); }
 
     private void AtualizarCargas()
     {

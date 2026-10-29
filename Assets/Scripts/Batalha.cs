@@ -10,7 +10,9 @@ public enum AcaoCartaBatalha
 {
     Nenhuma,
     Atacar,
-    Defender
+    Defender,
+    Skill,
+    Ult
 }
 
 public class GerenciadorBatalha : MonoBehaviour
@@ -110,11 +112,11 @@ public class GerenciadorBatalha : MonoBehaviour
             attrP2 = new List<AtributosRuntime> { GerarBuildSugerida(cartasFallbackParaTeste[2]), GerarBuildSugerida(cartasFallbackParaTeste[3]) };
         }
 
-        cartasP1[0] = InstanciarCarta(listaP1[0], attrP1[0], slotP1_Carta0);
-        cartasP1[1] = InstanciarCarta(listaP1[1], attrP1[1], slotP1_Carta1);
+        cartasP1[0] = InstanciarCarta(listaP1[0], attrP1[0], slotP1_Carta0, true, 0);
+        cartasP1[1] = InstanciarCarta(listaP1[1], attrP1[1], slotP1_Carta1, true, 1);
 
-        cartasP2[0] = InstanciarCarta(listaP2[0], attrP2[0], slotP2_Carta0);
-        cartasP2[1] = InstanciarCarta(listaP2[1], attrP2[1], slotP2_Carta1);
+        cartasP2[0] = InstanciarCarta(listaP2[0], attrP2[0], slotP2_Carta0, false, 0);
+        cartasP2[1] = InstanciarCarta(listaP2[1], attrP2[1], slotP2_Carta1, false, 1);
 
         RegistrarEstatisticasIniciais();
     }
@@ -143,7 +145,7 @@ public class GerenciadorBatalha : MonoBehaviour
         }
     }
 
-    private CartaBatalhaUI InstanciarCarta(CartaData data, AtributosRuntime attr, Transform slotTarget)
+    private CartaBatalhaUI InstanciarCarta(CartaData data, AtributosRuntime attr, Transform slotTarget, bool eDoP1, int indiceSlot)
     {
         if (slotTarget == null || prefabCartaBatalha == null) return null;
 
@@ -157,7 +159,7 @@ public class GerenciadorBatalha : MonoBehaviour
         CartaBatalhaUI cardUI = obj.GetComponent<CartaBatalhaUI>();
         if (cardUI != null)
         {
-            cardUI.InicializarCarta(data, attr);
+            cardUI.InicializarCarta(data, attr, eDoP1, indiceSlot, this);
         }
         return cardUI;
     }
@@ -195,7 +197,6 @@ public class GerenciadorBatalha : MonoBehaviour
         AplicarEscudoPassivoCaesar(cartasP1);
         AplicarEscudoPassivoCaesar(cartasP2);
 
-        // PASSIVA ASTRA YAO: Acúmulo passivo de carga de Skill no início do turno
         ProcessarPassivaAstraYao(cartasP1);
         ProcessarPassivaAstraYao(cartasP2);
 
@@ -204,8 +205,8 @@ public class GerenciadorBatalha : MonoBehaviour
             acoesP1[i] = AcaoCartaBatalha.Nenhuma;
             acoesP2[i] = AcaoCartaBatalha.Nenhuma;
 
-            if (cartasP1[i] != null) { cartasP1[i].LimparAcoesEspeciais(); cartasP1[i].AtualizarEstadoBotoesAcoesEspeciais(true); }
-            if (cartasP2[i] != null) { cartasP2[i].LimparAcoesEspeciais(); cartasP2[i].AtualizarEstadoBotoesAcoesEspeciais(true); }
+            if (cartasP1[i] != null) cartasP1[i].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP1[i]);
+            if (cartasP2[i] != null) cartasP2[i].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP2[i]);
         }
 
         AtualizarVisibilidadePaineis();
@@ -216,10 +217,7 @@ public class GerenciadorBatalha : MonoBehaviour
     {
         foreach (var carta in time)
         {
-            if (carta != null && carta.VidaAtual > 0)
-            {
-                carta.SetarEscudoInicial(0);
-            }
+            if (carta != null && carta.VidaAtual > 0) carta.SetarEscudoInicial(0);
         }
     }
 
@@ -230,10 +228,7 @@ public class GerenciadorBatalha : MonoBehaviour
             if (carta != null && carta.VidaAtual > 0)
             {
                 string nome = carta.CartaDados != null ? carta.CartaDados.nomePersonagem.Trim() : "";
-                if (nome == "Caesar King")
-                {
-                    carta.AdicionarEscudo(30);
-                }
+                if (nome == "Caesar King") carta.AdicionarEscudo(30);
             }
         }
     }
@@ -245,10 +240,7 @@ public class GerenciadorBatalha : MonoBehaviour
             if (carta != null && carta.VidaAtual > 0)
             {
                 string nome = carta.CartaDados != null ? carta.CartaDados.nomePersonagem.Trim() : "";
-                if (nome == "Astra Yao")
-                {
-                    carta.AdicionarCargaSkill(1);
-                }
+                if (nome == "Astra Yao") carta.AdicionarCargaSkill(1);
             }
         }
     }
@@ -311,15 +303,138 @@ public class GerenciadorBatalha : MonoBehaviour
         }
     }
 
-    public void P1_Carta0_Atacar() { if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno) { acoesP1[0] = AcaoCartaBatalha.Atacar; SetBotaoInterativo(btnAtacarP1_C0, false); SetBotaoInterativo(btnDefenderP1_C0, true); VerificarConclusaoEscolhaP1(); } }
-    public void P1_Carta0_Defender() { if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno) { acoesP1[0] = AcaoCartaBatalha.Defender; SetBotaoInterativo(btnAtacarP1_C0, true); SetBotaoInterativo(btnDefenderP1_C0, false); VerificarConclusaoEscolhaP1(); } }
-    public void P1_Carta1_Atacar() { if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno) { acoesP1[1] = AcaoCartaBatalha.Atacar; SetBotaoInterativo(btnAtacarP1_C1, false); SetBotaoInterativo(btnDefenderP1_C1, true); VerificarConclusaoEscolhaP1(); } }
-    public void P1_Carta1_Defender() { if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno) { acoesP1[1] = AcaoCartaBatalha.Defender; SetBotaoInterativo(btnAtacarP1_C1, true); SetBotaoInterativo(btnDefenderP1_C1, false); VerificarConclusaoEscolhaP1(); } }
+    // Ações padrão para P1 (Atualiza o estado visual de todos os botões da carta)
+    public void P1_Carta0_Atacar()
+    {
+        if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno)
+        {
+            acoesP1[0] = AcaoCartaBatalha.Atacar;
+            SetBotaoInterativo(btnAtacarP1_C0, false);
+            SetBotaoInterativo(btnDefenderP1_C0, true);
+            if (cartasP1[0] != null) cartasP1[0].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP1[0]);
+            VerificarConclusaoEscolhaP1();
+        }
+    }
+    public void P1_Carta0_Defender()
+    {
+        if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno)
+        {
+            acoesP1[0] = AcaoCartaBatalha.Defender;
+            SetBotaoInterativo(btnAtacarP1_C0, true);
+            SetBotaoInterativo(btnDefenderP1_C0, false);
+            if (cartasP1[0] != null) cartasP1[0].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP1[0]);
+            VerificarConclusaoEscolhaP1();
+        }
+    }
+    public void P1_Carta1_Atacar()
+    {
+        if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno)
+        {
+            acoesP1[1] = AcaoCartaBatalha.Atacar;
+            SetBotaoInterativo(btnAtacarP1_C1, false);
+            SetBotaoInterativo(btnDefenderP1_C1, true);
+            if (cartasP1[1] != null) cartasP1[1].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP1[1]);
+            VerificarConclusaoEscolhaP1();
+        }
+    }
+    public void P1_Carta1_Defender()
+    {
+        if (jogadorDecidindoAtual == 1 && !emResolucaoDeTurno)
+        {
+            acoesP1[1] = AcaoCartaBatalha.Defender;
+            SetBotaoInterativo(btnAtacarP1_C1, true);
+            SetBotaoInterativo(btnDefenderP1_C1, false);
+            if (cartasP1[1] != null) cartasP1[1].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP1[1]);
+            VerificarConclusaoEscolhaP1();
+        }
+    }
 
-    public void P2_Carta0_Atacar() { if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno) { acoesP2[0] = AcaoCartaBatalha.Atacar; SetBotaoInterativo(btnAtacarP2_C0, false); SetBotaoInterativo(btnDefenderP2_C0, true); VerificarConclusaoEscolhaP2(); } }
-    public void P2_Carta0_Defender() { if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno) { acoesP2[0] = AcaoCartaBatalha.Defender; SetBotaoInterativo(btnAtacarP2_C0, true); SetBotaoInterativo(btnDefenderP2_C0, false); VerificarConclusaoEscolhaP2(); } }
-    public void P2_Carta1_Atacar() { if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno) { acoesP2[1] = AcaoCartaBatalha.Atacar; SetBotaoInterativo(btnAtacarP2_C1, false); SetBotaoInterativo(btnDefenderP2_C1, true); VerificarConclusaoEscolhaP2(); } }
-    public void P2_Carta1_Defender() { if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno) { acoesP2[1] = AcaoCartaBatalha.Defender; SetBotaoInterativo(btnAtacarP2_C1, true); SetBotaoInterativo(btnDefenderP2_C1, false); VerificarConclusaoEscolhaP2(); } }
+    // Ações padrão para P2 (Atualiza o estado visual de todos os botões da carta)
+    public void P2_Carta0_Atacar()
+    {
+        if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno)
+        {
+            acoesP2[0] = AcaoCartaBatalha.Atacar;
+            SetBotaoInterativo(btnAtacarP2_C0, false);
+            SetBotaoInterativo(btnDefenderP2_C0, true);
+            if (cartasP2[0] != null) cartasP2[0].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP2[0]);
+            VerificarConclusaoEscolhaP2();
+        }
+    }
+    public void P2_Carta0_Defender()
+    {
+        if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno)
+        {
+            acoesP2[0] = AcaoCartaBatalha.Defender;
+            SetBotaoInterativo(btnAtacarP2_C0, true);
+            SetBotaoInterativo(btnDefenderP2_C0, false);
+            if (cartasP2[0] != null) cartasP2[0].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP2[0]);
+            VerificarConclusaoEscolhaP2();
+        }
+    }
+    public void P2_Carta1_Atacar()
+    {
+        if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno)
+        {
+            acoesP2[1] = AcaoCartaBatalha.Atacar;
+            SetBotaoInterativo(btnAtacarP2_C1, false);
+            SetBotaoInterativo(btnDefenderP2_C1, true);
+            if (cartasP2[1] != null) cartasP2[1].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP2[1]);
+            VerificarConclusaoEscolhaP2();
+        }
+    }
+    public void P2_Carta1_Defender()
+    {
+        if (jogadorDecidindoAtual == 2 && !emResolucaoDeTurno)
+        {
+            acoesP2[1] = AcaoCartaBatalha.Defender;
+            SetBotaoInterativo(btnAtacarP2_C1, true);
+            SetBotaoInterativo(btnDefenderP2_C1, false);
+            if (cartasP2[1] != null) cartasP2[1].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP2[1]);
+            VerificarConclusaoEscolhaP2();
+        }
+    }
+
+    // Seleção de Skill ou Ult (Permite trocar livremente e atualiza os visuais)
+    public void SelecionarAcaoEspecial(bool eDoP1, int indiceSlot, AcaoCartaBatalha novaAcao)
+    {
+        if (emResolucaoDeTurno || jogoEncerrado) return;
+
+        if (eDoP1 && jogadorDecidindoAtual == 1)
+        {
+            acoesP1[indiceSlot] = novaAcao;
+            if (indiceSlot == 0)
+            {
+                SetBotaoInterativo(btnAtacarP1_C0, true);
+                SetBotaoInterativo(btnDefenderP1_C0, true);
+                if (cartasP1[0] != null) cartasP1[0].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP1[0]);
+            }
+            else
+            {
+                SetBotaoInterativo(btnAtacarP1_C1, true);
+                SetBotaoInterativo(btnDefenderP1_C1, true);
+                if (cartasP1[1] != null) cartasP1[1].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP1[1]);
+            }
+            VerificarConclusaoEscolhaP1();
+        }
+        else if (!eDoP1 && jogadorDecidindoAtual == 2)
+        {
+            acoesP2[indiceSlot] = novaAcao;
+            if (indiceSlot == 0)
+            {
+                SetBotaoInterativo(btnAtacarP2_C0, true);
+                SetBotaoInterativo(btnDefenderP2_C0, true);
+                if (cartasP2[0] != null) cartasP2[0].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP2[0]);
+            }
+            else
+            {
+                SetBotaoInterativo(btnAtacarP2_C1, true);
+                SetBotaoInterativo(btnDefenderP2_C1, true);
+                if (cartasP2[1] != null) cartasP2[1].AtualizarEstadoBotoesAcoesEspeciais(true, acoesP2[1]);
+            }
+            VerificarConclusaoEscolhaP2();
+        }
+    }
 
     private void VerificarConclusaoEscolhaP1()
     {
@@ -370,10 +485,13 @@ public class GerenciadorBatalha : MonoBehaviour
 
             if (alvo != null && alvo.VidaAtual > 0)
             {
-                // VERIFICA SE O JOGADOR ESCOLHEU USAR A HABILIDADE (SKILL)
-                if (participante.carta.querUsarSkill)
+                // 1. AÇÃO DE HABILIDADE (SKILL)
+                if (participante.acao == AcaoCartaBatalha.Skill)
                 {
                     string nomePersonagem = participante.carta.CartaDados != null ? participante.carta.CartaDados.nomePersonagem.Trim() : "";
+
+                    participante.carta.ResetarCargasSkill();
+                    yield return StartCoroutine(RotinaAnimacaoSkill(participante.carta, alvo));
 
                     if (nomePersonagem == "Astra Yao")
                     {
@@ -384,23 +502,23 @@ public class GerenciadorBatalha : MonoBehaviour
                         Debug.Log($"{nomePersonagem} usou a Skill!");
                     }
 
-                    participante.carta.LimparAcoesEspeciais();
                     yield return new WaitForSeconds(0.5f);
                     if (VerificarFimDeJogo()) yield break;
                 }
-                // VERIFICA SE O JOGADOR ESCOLHEU USAR A ULTIMATE (ULT)
-                else if (participante.carta.querUsarUlt)
+                // 2. AÇÃO DE ULTIMATE (ULT)
+                else if (participante.acao == AcaoCartaBatalha.Ult)
                 {
                     string nomePersonagem = participante.carta.CartaDados != null ? participante.carta.CartaDados.nomePersonagem.Trim() : "";
 
                     Debug.Log($"{nomePersonagem} usou a Ultimate!");
                     participante.carta.ResetarCargasUlt();
 
-                    participante.carta.LimparAcoesEspeciais();
+                    yield return StartCoroutine(RotinaAnimacaoUltima(participante.carta, alvo));
+
                     yield return new WaitForSeconds(0.5f);
                     if (VerificarFimDeJogo()) yield break;
                 }
-                // FLUXO NORMAL DE ATAQUE
+                // 3. AÇÃO DE ATAQUE BÁSICO
                 else if (participante.acao == AcaoCartaBatalha.Atacar)
                 {
                     bool acaoConcluida = false;
@@ -450,10 +568,45 @@ public class GerenciadorBatalha : MonoBehaviour
     public void ExecutarSkillAstraYao(CartaBatalhaUI astra, CartaBatalhaUI alvo)
     {
         if (astra == null || astra.CartaDados == null) return;
-
-        astra.ResetarCargasSkill();
-        astra.AdicionarCargaUlt(2); // Converte energia para cargas da Ultimate
+        astra.AdicionarCargaUlt(2);
         astra.MostrarTextoPopUp("SUPORTE!", new Color(0.8f, 0.4f, 1f));
+    }
+
+    private IEnumerator RotinaAnimacaoSkill(CartaBatalhaUI carta, CartaBatalhaUI alvo)
+    {
+        carta.PiscarCarta(new Color(0.2f, 0.8f, 1f));
+        carta.MostrarTextoPopUp("HABILIDADE!", new Color(0.2f, 0.8f, 1f));
+
+        Vector3 posOriginal = carta.transform.position;
+        carta.transform.DOMove(posOriginal + (alvo.transform.position - posOriginal) * 0.2f, 0.15f).SetLoops(2, LoopType.Yoyo);
+
+        yield return new WaitForSeconds(0.3f);
+    }
+
+    private IEnumerator RotinaAnimacaoUltima(CartaBatalhaUI carta, CartaBatalhaUI alvo)
+    {
+        if (Camera.main != null)
+        {
+            Camera.main.transform.DOShakePosition(0.40f, strength: 50f, vibrato: 25);
+        }
+
+        carta.PiscarCarta(new Color(1f, 0.5f, 0f));
+        carta.MostrarTextoPopUp("ULTIMATE!", new Color(1f, 0.5f, 0f));
+
+        Vector3 posOriginal = carta.transform.position;
+        carta.transform.DOMove(posOriginal + (alvo.transform.position - posOriginal) * 0.35f, 0.2f).SetLoops(2, LoopType.Yoyo);
+
+        yield return new WaitForSeconds(0.3f);
+
+        int danoUlt = 30;
+        alvo.ReceberDano(danoUlt);
+        alvo.PiscarCarta(Color.red);
+        alvo.MostrarTextoPopUp($"-{danoUlt} ULT", Color.red);
+
+        if (danoCausadoMap.ContainsKey(carta)) danoCausadoMap[carta] += danoUlt;
+        if (danoRecebidoMap.ContainsKey(alvo)) danoRecebidoMap[alvo] += danoUlt;
+
+        VerificarMorteCarta(alvo);
     }
 
     private void AplicarDefesasSeNecessario(CartaBatalhaUI[] time, AcaoCartaBatalha[] acoes)
